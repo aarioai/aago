@@ -16,7 +16,7 @@ type ImagePattern struct {
 
 type FileSrc struct {
 	Provider        int          `json:"provider"`
-	URL             template.URL `json:"url"`         // e.g. https://xxx/img.jpg
+	URL             template.URL `json:"url"`         // original URL or default URL. e.g. https://xxx/img.jpg
 	UrlPattern      UrlPattern   `json:"url_pattern"` // e.g. https://xxx/img.jpg?maxwidth={max_width:int}
 	AlterUrlPattern UrlPattern   `json:"alter_url_pattern"`
 	BaseURL         template.URL `json:"base_url"`
@@ -30,13 +30,9 @@ type FileSrc struct {
 
 type AudioSrc struct {
 	FileSrc
-	Bitrate    int    `json:"bitrate"` // bit per second
+	Bitrate    int    `json:"bitrate"` // bitrate in bits per second (bps).
 	Duration   Second `json:"duration"`
 	SampleRate int    `json:"sample_rate"` // HZ
-}
-
-type DocSrc struct {
-	FileSrc
 }
 
 type ImgSrc struct {

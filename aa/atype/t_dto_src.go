@@ -9,26 +9,26 @@ import (
 
 var imagePatternTag = regexp.MustCompile(`([a-z]+)(\d+)`)
 
-func (s AudioSrcOld) Filename() AudioPath { return AudioPath(s.Path) }
+func (s AudioSrc) Filename() AudioPath { return AudioPath(s.Path) }
 
-func (s AudioSrcOld) Adjust(quality string) template.URL {
-	return s.Pattern.ReplaceAll("quality", "int", quality).URL()
+func (s AudioSrc) Adjust(quality string) template.URL {
+	return s.UrlPattern.ReplaceAll("quality", "int", quality).URL()
 }
 
 // Stored in the database. Image lists use arrays to save space; see atype.NullStrings or string.
 
-func (s FileSrcOld) Filename() FilePath { return FilePath(s.Path) }
+func (s FileSrc) Filename() FilePath { return FilePath(s.Path) }
 
 // Stored in the database. Image lists use arrays to save space; see atype.NullStrings or string.
 
-func (s ImgSrcOld) Filename() ImagePath { return ImagePath(s.Path) }
+func (s ImgSrc) Filename() ImagePath { return ImagePath(s.Path) }
 
-func (s ImgSrcOld) Crop(width, height int) template.URL {
+func (s ImgSrc) Crop(width, height int) template.URL {
 	if s.Provider == 0 {
-		return s.Origin
+		return s.URL
 	}
-	if width >= s.Width && height >= s.Height && s.Origin != "" {
-		return s.Origin
+	if width >= s.Width && height >= s.Height && s.URL != "" {
+		return s.URL
 	}
 	if s.Allowed != nil {
 		var matched, found bool
@@ -74,7 +74,7 @@ func (s ImgSrcOld) Crop(width, height int) template.URL {
 
 	sw := types.FormatInt(width)
 	sh := types.FormatInt(height)
-	return s.CropPattern.ReplaceMany(map[string]string{
+	return s.CropUrlPattern.ReplaceMany(map[string]string{
 		"{width}":      sw,
 		"{width:int}":  sw,
 		"{height}":     sh,
@@ -82,12 +82,12 @@ func (s ImgSrcOld) Crop(width, height int) template.URL {
 	}).URL()
 }
 
-func (s ImgSrcOld) Resize(maxWidth int) template.URL {
+func (s ImgSrc) Resize(maxWidth int) template.URL {
 	if s.Provider == 0 {
-		return s.Origin
+		return s.URL
 	}
-	if maxWidth >= s.Width && s.Origin != "" {
-		return s.Origin
+	if maxWidth >= s.Width && s.URL != "" {
+		return s.URL
 	}
 
 	if s.Allowed != nil {
@@ -125,12 +125,12 @@ func (s ImgSrcOld) Resize(maxWidth int) template.URL {
 		}
 	}
 	sw := types.FormatInt(maxWidth)
-	return s.ResizePattern.ReplaceAll("max_width", ":int", sw).URL()
+	return s.UrlPattern.ReplaceAll("max_width", ":int", sw).URL()
 }
 
-func (s VideoSrcOld) Filename() VideoPath { return VideoPath(s.Path) }
-func (s VideoSrcOld) Adjust(quality string) template.URL {
-	return s.Pattern.ReplaceAll("quality", ":int", quality).URL()
+func (s VideoSrc) Filename() VideoPath { return VideoPath(s.Path) }
+func (s VideoSrc) Adjust(quality string) template.URL {
+	return s.UrlPattern.ReplaceAll("quality", ":int", quality).URL()
 }
 
 func ImageFill(width, height int) ImagePattern {

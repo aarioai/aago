@@ -27,12 +27,12 @@ func TestStringifyPayloadFields(t *testing.T) {
 	}
 	type y struct {
 		Child
-		Bad    atype.ImagePaths  `json:"bad"`
-		Tmp    atype.ImgSrcOld   `json:"-"`
-		t      []atype.ImgSrcOld `json:"images"`
-		Y      *int              `json:"y"`
-		Img    *atype.ImgSrcOld  `json:"img"`
-		Images []atype.ImgSrcOld `json:"ims"`
+		Bad    atype.ImagePaths `json:"bad"`
+		Tmp    atype.ImgSrc     `json:"-"`
+		t      []atype.ImgSrc   `json:"images"`
+		Y      *int             `json:"y"`
+		Img    *atype.ImgSrc    `json:"img"`
+		Images []atype.ImgSrc   `json:"ims"`
 	}
 	type x struct {
 		Child
@@ -43,12 +43,12 @@ func TestStringifyPayloadFields(t *testing.T) {
 		M *atype.Money `json:"m"`
 		N atype.Money  `json:"money"`
 	}
-	img := atype.ImgSrcOld{}
-	ims := []atype.ImgSrcOld{img}
+	img := atype.ImgSrc{}
+	ims := []atype.ImgSrc{img}
 	yy := 10000
 	y0 := y{Y: &yy, Images: ims}
 	a := x{A: "LOVE", B: 100, C: 300, Y: &y0}
-	as := `{"a":"LOVE","b":"100","c":300,"m":null,"money":"0","test":"","y":{"bad":{},"img":null,"ims":[{"allowed":null,"crop_pattern":"","filetype":0,"height":0,"jsonkey":"","origin":"","path":"","provider":0,"resize_pattern":"","size":0,"width":0}],"test":"","y":10000}}`
+	as := `{"a":"LOVE","b":"100","c":300,"m":null,"money":"0","test":"","y":{"bad":{},"img":null,"ims":[{"allowed":null,"alter_url_pattern":"","base_url":"","checksum":"","crop_url_pattern":"","filesize":0,"filetype":"","height":0,"info":"","jsonkey":"","path":"","provider":0,"url":"","url_pattern":"","width":0}],"test":"","y":10000}}`
 	s := jsons(StringifyBigintFields(a, "json"))
 	if s != as {
 		t.Errorf("%s --> %s", s, as)

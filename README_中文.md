@@ -10,7 +10,7 @@ Airis aconfig 里面默认使用 Consul 进行服务注册和服务发现，并�
 
 ## Demo 入门示例说明
 
-Demo 代码请参考 `airis-tool/demo` 目录。
+Demo 代码请参考 `[airis-tool/demo](https://github.com/aarioai/airis-tool/demo)` 
 
 project 目录下，放了3个示例项目：
 * tutorial  生成代码目录前的项目初始化状态

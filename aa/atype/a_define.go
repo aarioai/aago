@@ -49,12 +49,11 @@ type UrlPattern string      // e.g. https://xxx/{user}/video.avi?quality={qualit
 // See ./t_path_mime.go
 
 type FilePath string
-type DocumentPath FilePath
+type DocPath FilePath
 type ImagePath FilePath
 type VideoPath FilePath
 type AudioPath FilePath
 type FilePaths struct{ NullStrings }
-type DocumentPaths FilePaths
 type ImagePaths FilePaths
 type VideoPaths FilePaths
 type AudioPaths FilePaths
