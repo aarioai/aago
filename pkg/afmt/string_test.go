@@ -3,11 +3,12 @@ package afmt_test
 import (
 	"bytes"
 	"fmt"
-	"github.com/aarioai/airis/pkg/types"
 	"strings"
 	"testing"
 
-	"github.com/aarioai/airis/pkg/afmt"
+	"github.com/aarioai/aago/pkg/types"
+
+	"github.com/aarioai/aago/pkg/afmt"
 )
 
 func TestResize(t *testing.T) {

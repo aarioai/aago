@@ -1,12 +1,13 @@
 package httpsvr
 
 import (
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/aa/atype"
-	"github.com/aarioai/airis/pkg/types"
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/aa/atype"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // newlineSep treats consecutive newlines as separators. Compiled once so each parameter split does not rebuild the automaton.

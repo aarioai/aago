@@ -6,11 +6,11 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/aa/alog"
-	"github.com/aarioai/airis/pkg/afmt"
-	"github.com/aarioai/airis/pkg/arrmap"
-	"github.com/aarioai/airis/pkg/utils"
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/aa/alog"
+	"github.com/aarioai/aago/pkg/afmt"
+	"github.com/aarioai/aago/pkg/arrmap"
+	"github.com/aarioai/aago/pkg/utils"
 )
 
 func (c *Config) PanicIfNotEqual(key, want string) {

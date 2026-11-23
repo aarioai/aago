@@ -2,7 +2,8 @@ package aconfig
 
 import (
 	"fmt"
-	"github.com/aarioai/airis/pkg/nets"
+
+	"github.com/aarioai/aago/pkg/nets"
 	"github.com/hashicorp/consul/api"
 )
 

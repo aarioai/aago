@@ -1,7 +1,7 @@
 package consul
 
 import (
-	"github.com/aarioai/airis/pkg/basic"
+	"github.com/aarioai/aago/pkg/basic"
 	"github.com/hashicorp/consul/api"
 	"google.golang.org/grpc/resolver"
 )

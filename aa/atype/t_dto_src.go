@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"regexp"
 
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 var imagePatternTag = regexp.MustCompile(`([a-z]+)(\d+)`)

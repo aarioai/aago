@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aarioai/airis/aa/aconfig"
+	"github.com/aarioai/aago/aa/aconfig"
 )
 
 func TestParseYAML(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/aarioai/airis/pkg/arrmap"
+	"github.com/aarioai/aago/pkg/arrmap"
 )
 
 func TestSortedKeys(t *testing.T) {

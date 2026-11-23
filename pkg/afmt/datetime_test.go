@@ -1,9 +1,10 @@
 package afmt_test
 
 import (
-	"github.com/aarioai/airis/pkg/afmt"
 	"testing"
 	"time"
+
+	"github.com/aarioai/aago/pkg/afmt"
 )
 
 func TestTimeDiff(t *testing.T) {

@@ -1,8 +1,9 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/pkg/basic"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/basic"
 )
 
 // Weekday path-parameter helpers used by httpsvr ({name:weekday}).

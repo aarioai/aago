@@ -3,12 +3,13 @@ package alog
 import (
 	"context"
 	"fmt"
-	"github.com/aarioai/airis/aa/acontext"
-	"github.com/aarioai/airis/pkg/utils"
 	"log"
 	"strings"
 
-	"github.com/aarioai/airis/aa/ae"
+	"github.com/aarioai/aago/aa/acontext"
+	"github.com/aarioai/aago/pkg/utils"
+
+	"github.com/aarioai/aago/aa/ae"
 )
 
 type xlog struct {

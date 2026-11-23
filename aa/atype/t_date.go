@@ -2,10 +2,11 @@ package atype
 
 import (
 	"errors"
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/pkg/types"
 	"strings"
 	"time"
+
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // IsZeroDate detects a string is empty/zero/min date or datetime

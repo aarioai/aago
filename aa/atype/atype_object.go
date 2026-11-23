@@ -12,12 +12,13 @@ func (p *Atype) IsNil() bool {
 	}
 	v := reflect.ValueOf(p.raw)
 	switch v.Kind() {
-	case reflect.Ptr, reflect.UnsafePointer,
+	case reflect.Pointer, reflect.UnsafePointer,
 		reflect.Map, reflect.Slice,
 		reflect.Array, reflect.Interface:
 		return v.IsNil()
+	default:
+		return false
 	}
-	return false
 }
 
 func (p *Atype) Strings() ([]string, bool) {

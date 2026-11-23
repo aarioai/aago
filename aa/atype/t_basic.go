@@ -1,9 +1,10 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/pkg/basic"
-	"github.com/aarioai/airis/pkg/types"
 	"time"
+
+	"github.com/aarioai/aago/pkg/basic"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func (s Sid) String() string {

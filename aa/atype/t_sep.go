@@ -3,9 +3,10 @@ package atype
 import (
 	"bytes"
 	"encoding/binary"
-	"github.com/aarioai/airis/pkg/types"
 	"io"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func delimiter(delimiters ...string) string {

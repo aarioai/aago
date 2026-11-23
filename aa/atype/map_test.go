@@ -1,8 +1,9 @@
 package atype_test
 
 import (
-	"github.com/aarioai/airis/aa/atype"
 	"testing"
+
+	"github.com/aarioai/aago/aa/atype"
 )
 
 func TestAtypeMap(t *testing.T) {

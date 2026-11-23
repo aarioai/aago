@@ -13,8 +13,8 @@ import (
 	"strconv"
 	"sync"
 
-	"github.com/aarioai/airis/aa/acontext"
-	ctxatype "github.com/aarioai/airis/aa/httpsvr/atype"
+	"github.com/aarioai/aago/aa/acontext"
+	ctxatype "github.com/aarioai/aago/aa/httpsvr/atype"
 )
 
 // RequestIDKey is the context value set by the RequestID middleware.

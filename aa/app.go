@@ -2,13 +2,14 @@ package aa
 
 import (
 	"context"
-	"github.com/aarioai/airis/aa/aconfig"
-	"github.com/aarioai/airis/aa/acontext"
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/aa/alog"
-	"github.com/aarioai/airis/aa/helpers/debug"
-	"github.com/aarioai/airis/aa/httpsvr"
-	"github.com/aarioai/airis/pkg/afmt"
+
+	"github.com/aarioai/aago/aa/aconfig"
+	"github.com/aarioai/aago/aa/acontext"
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/aa/alog"
+	"github.com/aarioai/aago/aa/helpers/debug"
+	"github.com/aarioai/aago/aa/httpsvr"
+	"github.com/aarioai/aago/pkg/afmt"
 )
 
 type App struct {

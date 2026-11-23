@@ -1,10 +1,11 @@
 package utils
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func Caller(skip int) string {
@@ -16,8 +17,8 @@ func Caller(skip int) string {
 			return ""
 		}
 		slash := filepath.ToSlash(file)
-		// module cache: /airis@v1.0.0/ ; source tree: /airis/
-		if strings.Contains(slash, "/airis/") || strings.Contains(slash, "/airis@") {
+		// module cache: /aago@v1.0.0/ ; source tree: /aago/
+		if strings.Contains(slash, "/aago/") || strings.Contains(slash, "/aago@") {
 			skip++
 			continue
 		}

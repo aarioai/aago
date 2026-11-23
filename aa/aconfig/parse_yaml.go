@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aarioai/airis/aa/atype"
-	"github.com/aarioai/airis/pkg/arrmap"
+	"github.com/aarioai/aago/aa/atype"
+	"github.com/aarioai/aago/pkg/arrmap"
 	"gopkg.in/yaml.v3"
 )
 

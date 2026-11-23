@@ -2,9 +2,10 @@ package alog
 
 import (
 	"fmt"
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/pkg/afmt"
 	"log"
+
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/pkg/afmt"
 )
 
 var (

@@ -1,6 +1,6 @@
 # httpsvr
 
-Native HTTP context and router for airis. Built on `net/http` only.
+Native HTTP context and router for aago. Built on `net/http` only.
 
 Request parsing (`Query*` / `Body*`) and DTO responses (`TryWrite` / `WriteE` / …) live on `*httpsvr.Context`.
 

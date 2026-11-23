@@ -3,7 +3,7 @@ package aenum
 type Continent uint8
 
 const (
-	NilContinent Continent = 0 // no, or invalid continent
+	NoContinent  Continent = 0 // no, or invalid continent
 	Asia         Continent = 1
 	Europe       Continent = 2
 	NorthAmerica Continent = 3

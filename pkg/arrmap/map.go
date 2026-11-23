@@ -1,7 +1,7 @@
 package arrmap
 
 import (
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // maps.Copy(dst, src)

@@ -1,9 +1,10 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"math"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // https://www.splashlearn.com/math-vocabulary/decimals/decimal-point

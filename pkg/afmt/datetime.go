@@ -3,10 +3,11 @@ package afmt
 import (
 	"bytes"
 	"errors"
-	"github.com/aarioai/airis/pkg/types"
 	"math"
 	"strings"
 	"time"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 var (

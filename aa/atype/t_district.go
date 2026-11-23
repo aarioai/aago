@@ -2,7 +2,8 @@ package atype
 
 import (
 	"errors"
-	"github.com/aarioai/airis/pkg/types"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 var (

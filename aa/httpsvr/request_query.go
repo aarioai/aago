@@ -1,8 +1,8 @@
 package httpsvr
 
 import (
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func (c *Context) QueryBool(p string) (bool, *ae.Error) {

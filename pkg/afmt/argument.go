@@ -3,7 +3,7 @@ package afmt
 import (
 	"fmt"
 
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func DefaultIfZero[T types.BasicType](v, defaultV T) T {

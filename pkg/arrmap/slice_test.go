@@ -1,9 +1,10 @@
 package arrmap_test
 
 import (
-	"github.com/aarioai/airis/pkg/arrmap"
-	"golang.org/x/exp/slices"
 	"testing"
+
+	"github.com/aarioai/aago/pkg/arrmap"
+	"golang.org/x/exp/slices"
 )
 
 func TestCompact(t *testing.T) {

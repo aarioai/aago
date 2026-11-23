@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aarioai/airis/pkg/afmt"
-	"github.com/aarioai/airis/pkg/utils"
+	"github.com/aarioai/aago/pkg/afmt"
+	"github.com/aarioai/aago/pkg/utils"
 )
 
 func First(es ...*Error) *Error {

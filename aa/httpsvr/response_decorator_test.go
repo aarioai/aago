@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/aa/atype"
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/aa/atype"
 )
 
 func jsons(v any, e *ae.Error) string {

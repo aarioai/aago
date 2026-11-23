@@ -3,14 +3,15 @@ package atype
 import (
 	"database/sql"
 	"fmt"
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/pkg/types"
-	"golang.org/x/exp/constraints"
 	"log"
 	"reflect"
 	"slices"
 	"sort"
 	"strings"
+
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/pkg/types"
+	"golang.org/x/exp/constraints"
 )
 
 var (

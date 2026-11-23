@@ -1,7 +1,7 @@
 package aenum
 
 import (
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 type Status int8 // the status field must not default to 0, to avoid accidents

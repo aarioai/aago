@@ -11,9 +11,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aarioai/airis/aa/ae"
-	"github.com/aarioai/airis/aa/atype"
-	"github.com/aarioai/airis/pkg/utils"
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/aa/atype"
+	"github.com/aarioai/aago/pkg/utils"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )

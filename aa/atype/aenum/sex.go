@@ -1,15 +1,16 @@
 package aenum
 
 import (
-	"github.com/aarioai/airis/pkg/basic"
-	"github.com/aarioai/airis/pkg/types"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/basic"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 type Sex uint8
 
 const (
-	NilSex   Sex = 0 // no, or invalid sex
+	NoSex    Sex = 0 // no, or invalid sex
 	Male     Sex = 1
 	Female   Sex = 2
 	OtherSex Sex = 255
@@ -21,7 +22,7 @@ func (x Sex) Valid() bool {
 
 func NewSex(sex uint8) Sex {
 	x := Sex(sex)
-	return basic.Ter(x.Valid(), x, NilSex)
+	return basic.Ter(x.Valid(), x, NoSex)
 }
 
 func ToSex(x string) Sex {
@@ -34,7 +35,7 @@ func ToSex(x string) Sex {
 	case "255":
 		return OtherSex
 	default:
-		return NilSex
+		return NoSex
 	}
 }
 func (x Sex) Uint8() uint8   { return uint8(x) }

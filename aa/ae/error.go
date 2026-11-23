@@ -3,11 +3,12 @@ package ae
 import (
 	"context"
 	"fmt"
-	"github.com/aarioai/airis/aa/acontext"
-	"github.com/aarioai/airis/pkg/afmt"
-	"github.com/aarioai/airis/pkg/types"
-	"github.com/aarioai/airis/pkg/utils"
 	"strings"
+
+	"github.com/aarioai/aago/aa/acontext"
+	"github.com/aarioai/aago/pkg/afmt"
+	"github.com/aarioai/aago/pkg/types"
+	"github.com/aarioai/aago/pkg/utils"
 )
 
 // Error defines the standard error structure.

@@ -1,7 +1,7 @@
 package httpsvr
 
 import (
-	"github.com/aarioai/airis/aa/ae"
+	"github.com/aarioai/aago/aa/ae"
 )
 
 func (c *Context) FirstError(es ...*ae.Error) *ae.Error {

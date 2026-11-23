@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aarioai/airis/aa/atype"
+	"github.com/aarioai/aago/aa/atype"
 )
 
 type segment struct {

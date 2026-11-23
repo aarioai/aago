@@ -3,8 +3,9 @@ package atype
 import (
 	"errors"
 	"fmt"
-	"github.com/aarioai/airis/pkg/types"
 	"strconv"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // String convert into string

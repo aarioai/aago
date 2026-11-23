@@ -1,13 +1,13 @@
 package aenum
 
-import "github.com/aarioai/airis/pkg/types"
+import "github.com/aarioai/aago/pkg/types"
 
 type Country uint16
 
 const (
-	NilCountry Country = 0     // no, or invalid country
-	Canada     Country = 50001 // Canada shares the same country calling code (+1) as the United States.
-	America    Country = 1
+	NoCountry Country = 0     // no, or invalid country
+	Canada    Country = 50001 // Canada shares the same country calling code (+1) as the United States.
+	America   Country = 1
 
 	Russia        Country = 7
 	Egypt         Country = 20

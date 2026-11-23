@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aarioai/airis/aa/acontext"
-	"github.com/aarioai/airis/aa/ae"
+	"github.com/aarioai/aago/aa/acontext"
+	"github.com/aarioai/aago/aa/ae"
 )
 
 func (c *Context) ensureSettings() {

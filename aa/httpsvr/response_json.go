@@ -3,7 +3,7 @@ package httpsvr
 import (
 	"net/http"
 
-	"github.com/aarioai/airis/aa/ae"
+	"github.com/aarioai/aago/aa/ae"
 )
 
 func JSON(ctx *Context, data any) error {

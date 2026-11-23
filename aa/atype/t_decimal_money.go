@@ -2,9 +2,10 @@ package atype
 
 import (
 	"fmt"
-	"github.com/aarioai/airis/pkg/types"
 	"math"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // Exchange rates usually keep 4 decimal places, so amounts here are value * 10000.

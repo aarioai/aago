@@ -1,8 +1,9 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"reflect"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // ToMap converts any value to map[any]any

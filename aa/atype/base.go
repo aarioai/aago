@@ -3,7 +3,7 @@ package atype
 import (
 	"encoding/json/jsontext"
 	"errors"
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/pkg/types"
 	"strconv"
 )
 

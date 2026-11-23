@@ -1,9 +1,10 @@
 package arrmap
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"slices"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // JoinKeys joins the map keys with sep.

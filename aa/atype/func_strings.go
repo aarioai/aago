@@ -12,7 +12,7 @@ func IsUUID(s string) bool {
 	// 32: hex without dashes. 36: canonical 8-4-4-4-12 with version/variant nibbles.
 	switch len(s) {
 	case 32:
-		for i := 0; i < 32; i++ {
+		for i := range 32 {
 			if !isHexByte(s[i]) {
 				return false
 			}

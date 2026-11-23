@@ -1,10 +1,10 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/aa/ae"
-	datatype "github.com/aarioai/airis/aa/atype"
-	"github.com/aarioai/airis/aa/atype/aenum"
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/aa/ae"
+	datatype "github.com/aarioai/aago/aa/atype"
+	"github.com/aarioai/aago/aa/atype/aenum"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func isRequired(requireds []bool) bool {

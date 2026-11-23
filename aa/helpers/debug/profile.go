@@ -2,12 +2,13 @@ package debug
 
 import (
 	"fmt"
-	"github.com/aarioai/airis/aa/atype"
-	"github.com/aarioai/airis/pkg/afmt"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
+
+	"github.com/aarioai/aago/aa/atype"
+	"github.com/aarioai/aago/pkg/afmt"
 )
 
 const (

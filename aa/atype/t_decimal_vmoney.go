@@ -1,8 +1,9 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"math"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // virtual money

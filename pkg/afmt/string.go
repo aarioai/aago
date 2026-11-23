@@ -3,7 +3,7 @@ package afmt
 import (
 	"strings"
 
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // Resize pads a []byte or []rune slice to the given length, and truncates it when it is longer.

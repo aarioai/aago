@@ -1,6 +1,6 @@
 package atype
 
-import "github.com/aarioai/airis/pkg/afmt"
+import "github.com/aarioai/aago/pkg/afmt"
 
 var (
 	DefaultPageSize = uint8(10)

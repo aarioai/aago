@@ -4,11 +4,11 @@ import (
 	"html/template"
 	"time"
 
-	"github.com/aarioai/airis/aa/ae"
-	datatype "github.com/aarioai/airis/aa/atype"
-	"github.com/aarioai/airis/aa/atype/aenum"
-	"github.com/aarioai/airis/pkg/afmt"
-	"github.com/aarioai/airis/pkg/types"
+	"github.com/aarioai/aago/aa/ae"
+	datatype "github.com/aarioai/aago/aa/atype"
+	"github.com/aarioai/aago/aa/atype/aenum"
+	"github.com/aarioai/aago/pkg/afmt"
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // Body groups Body parsers that return atype / aenum values.

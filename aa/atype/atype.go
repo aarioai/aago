@@ -2,8 +2,9 @@ package atype
 
 import (
 	"database/sql"
-	"github.com/aarioai/airis/pkg/types"
 	"sync"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // Atype provides type-safe, efficient type conversion

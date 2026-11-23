@@ -8,7 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aarioai/airis/aa/helpers/debug"
+	"github.com/aarioai/aago/aa/helpers/debug"
+	"github.com/aarioai/aago/pkg/utils"
 )
 
 func testLogWriterBuffer(t *testing.T, bufferSize int) {
@@ -24,7 +25,7 @@ func testLogWriterBuffer(t *testing.T, bufferSize int) {
 	if err != nil {
 		t.Fatal(err.Error())
 	}
-	defer lw.Close()
+	defer utils.Close(lw)
 
 	now := time.Now().Format("2006-01-02 15:04:05")
 	testData := []byte(fmt.Sprintf(now+" buffer:%d\n", bufferSize))

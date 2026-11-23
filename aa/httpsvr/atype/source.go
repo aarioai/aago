@@ -1,6 +1,6 @@
 package atype
 
-import "github.com/aarioai/airis/aa/ae"
+import "github.com/aarioai/aago/aa/ae"
 
 // QuerySource is the basic Query surface httpsvr.Context provides.
 type QuerySource interface {

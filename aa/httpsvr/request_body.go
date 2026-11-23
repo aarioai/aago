@@ -1,9 +1,12 @@
 package httpsvr
 
 import (
-	"github.com/aarioai/airis/aa/ae"
+	"slices"
+
 	"mime/multipart"
 	"strings"
+
+	"github.com/aarioai/aago/aa/ae"
 )
 
 func (c *Context) Files(p string, required ...bool) ([]*multipart.FileHeader, *ae.Error) {
@@ -55,10 +58,8 @@ func (c *Context) BodyEnum(p string, required bool, validators []string) (string
 	if !required && x == "" {
 		return "", nil
 	}
-	for _, val := range validators {
-		if x == val {
-			return x, nil
-		}
+	if slices.Contains(validators, x) {
+		return x, nil
 	}
 	return x, ae.NewBadParam(p)
 }
@@ -70,10 +71,8 @@ func (c *Context) BodyEnum8(p string, required bool, validators []uint8) (uint8,
 	if !required && x == 0 {
 		return 0, nil
 	}
-	for _, val := range validators {
-		if x == val {
-			return x, nil
-		}
+	if slices.Contains(validators, x) {
+		return x, nil
 	}
 	return x, ae.NewBadParam(p)
 }
@@ -85,10 +84,8 @@ func (c *Context) BodyEnum8i(p string, required bool, validators []int8) (int8, 
 	if !required && x == 0 {
 		return 0, nil
 	}
-	for _, val := range validators {
-		if x == val {
-			return x, nil
-		}
+	if slices.Contains(validators, x) {
+		return x, nil
 	}
 	return x, ae.NewBadParam(p)
 }

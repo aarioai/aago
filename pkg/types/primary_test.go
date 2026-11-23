@@ -1,9 +1,10 @@
 package types_test
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"reflect"
 	"testing"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 type FakeInt24 int32

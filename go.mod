@@ -1,4 +1,4 @@
-module github.com/aarioai/airis
+module github.com/aarioai/aago
 
 go 1.27
 

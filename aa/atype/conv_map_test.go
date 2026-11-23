@@ -2,8 +2,9 @@ package atype_test
 
 import (
 	json "encoding/json/v2"
-	"github.com/aarioai/airis/aa/atype"
 	"testing"
+
+	"github.com/aarioai/aago/aa/atype"
 )
 
 func TestConvStrings(t *testing.T) {

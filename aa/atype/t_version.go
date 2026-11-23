@@ -1,8 +1,9 @@
 package atype
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"strings"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 // Version. nginx and similar tools compare versions by turning each segment into a 3-digit integer.

@@ -3,15 +3,16 @@ package debug
 import (
 	"bufio"
 	"fmt"
-	"github.com/aarioai/airis/pkg/afmt"
-	"github.com/aarioai/airis/pkg/ios"
-	"github.com/aarioai/airis/pkg/utils"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/aarioai/aago/pkg/afmt"
+	"github.com/aarioai/aago/pkg/ios"
+	"github.com/aarioai/aago/pkg/utils"
 )
 
 const (
@@ -88,7 +89,7 @@ func RedirectLog(dir string, perm os.FileMode, bufSize int, symlink ...string) (
 	if panicFile, err = os.OpenFile(panicLog, os.O_CREATE|os.O_APPEND|os.O_WRONLY, perm); err != nil {
 		return nil, fmt.Errorf("failed to open crash file: %w", err)
 	}
-	defer panicFile.Close()
+	defer utils.Close(panicFile)
 
 	if err = redirectStderr(panicFile); err != nil {
 		return nil, fmt.Errorf("failed to redirect stderr: %w", err)
@@ -264,7 +265,7 @@ func (lw *LogWriter) openFile() error {
 		lw.bufWriter = nil
 	}
 	if lw.file != nil {
-		_ = lw.file.Close()
+		utils.Close(lw.file)
 		lw.file = nil
 	}
 

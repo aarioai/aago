@@ -3,7 +3,7 @@ package afmt_test
 import (
 	"testing"
 
-	"github.com/aarioai/airis/pkg/afmt"
+	"github.com/aarioai/aago/pkg/afmt"
 )
 
 func TestFirstNotNil(t *testing.T) {

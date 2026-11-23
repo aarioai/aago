@@ -1,10 +1,11 @@
 package atype_test
 
 import (
-	"github.com/aarioai/airis/aa/atype"
 	"math"
 	"math/rand"
 	"testing"
+
+	"github.com/aarioai/aago/aa/atype"
 )
 
 func TestPercent(t *testing.T) {

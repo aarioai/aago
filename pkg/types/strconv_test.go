@@ -1,11 +1,12 @@
 package types_test
 
 import (
-	"github.com/aarioai/airis/pkg/types"
 	"math"
 	"math/rand/v2"
 	"strconv"
 	"testing"
+
+	"github.com/aarioai/aago/pkg/types"
 )
 
 func TestFormatBase64Uint(t *testing.T) {

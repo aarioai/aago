@@ -1,7 +1,7 @@
 package httpsvr
 
 import (
-	"github.com/aarioai/airis/aa/ae"
+	"github.com/aarioai/aago/aa/ae"
 )
 
 // Body has no methods. It is a plain struct and does not need object-pool management.
