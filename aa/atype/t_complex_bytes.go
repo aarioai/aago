@@ -40,7 +40,7 @@ func (ip IP) Bytes() []byte {
 }
 
 func (ip IP) OK() bool {
-	return ip.Valid && len(ip.String) == net.IPv4len || len(ip.String) == net.IPv6len
+	return ip.Valid && (len(ip.String) == net.IPv4len || len(ip.String) == net.IPv6len)
 }
 func (ip IP) Net() net.IP {
 	b := ip.Bytes()

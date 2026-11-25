@@ -30,7 +30,6 @@ func NewText(s string, trim bool) Text {
 	return Text(s)
 }
 
-
 func (t Text) Html() template.HTML {
 	if t == "" {
 		return ""

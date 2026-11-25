@@ -34,9 +34,11 @@ type Router struct {
 	root *Party
 
 	// routerFilters run before route matching (UseRouter), e.g. CORS / recover.
-	routerFilters []Handler
+	routerFilters     []Handler
+	routerFilterChain []Handler
 
-	byMethod map[string][]route
+	byMethod     map[string][]route
+	staticRoutes map[string]map[string]int
 
 	errorHandlers map[int][]Handler
 
@@ -59,6 +61,7 @@ func New() *Router { return NewRouter() }
 func NewRouter() *Router {
 	rt := &Router{
 		byMethod:      make(map[string][]route),
+		staticRoutes:  make(map[string]map[string]int),
 		errorHandlers: make(map[int][]Handler),
 	}
 	rt.root = &Party{router: rt, prefix: ""}
@@ -72,6 +75,9 @@ func (rt *Router) UseHooks(hooks any) { rt.hooks = hooks }
 // They always execute for every request, including 404/405.
 func (rt *Router) UseRouter(handlers ...Handler) {
 	rt.routerFilters = append(rt.routerFilters, handlers...)
+	rt.routerFilterChain = make([]Handler, 0, len(rt.routerFilters)+1)
+	rt.routerFilterChain = append(rt.routerFilterChain, rt.routerFilters...)
+	rt.routerFilterChain = append(rt.routerFilterChain, rt.serveMatched)
 }
 
 // Use appends begin middleware on the root party.
@@ -286,6 +292,15 @@ func (p *Party) handle(method, path string, handlers ...Handler) {
 		paramN:   paramN,
 		handlers: chain,
 	})
+	if paramN == 0 {
+		if rt.staticRoutes[method] == nil {
+			rt.staticRoutes[method] = make(map[string]int)
+		}
+		key := normalizeRoutePath(full)
+		if _, exists := rt.staticRoutes[method][key]; !exists {
+			rt.staticRoutes[method][key] = len(rt.byMethod[method]) - 1
+		}
+	}
 }
 
 func handlerIndex(list []Handler, h Handler) int {
@@ -300,10 +315,7 @@ func handlerIndex(list []Handler, h Handler) int {
 
 func (rt *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if len(rt.routerFilters) > 0 {
-		chain := make([]Handler, 0, len(rt.routerFilters)+1)
-		chain = append(chain, rt.routerFilters...)
-		chain = append(chain, rt.serveMatched)
-		ctx := acquireContext(w, r, Params{}, chain, rt.hooks, rt.views)
+		ctx := acquireContext(w, r, Params{}, rt.routerFilterChain, rt.hooks, rt.views)
 		ctx.Next()
 		if !ctx.wrote && ctx.status != 0 {
 			ctx.writeHeader()
@@ -330,15 +342,34 @@ func (rt *Router) dispatch(w http.ResponseWriter, r *http.Request) {
 
 func (rt *Router) dispatchContext(c *Context) {
 	r := c.Request()
-	segs := pathSegments(r.URL.Path)
+	path := r.URL.Path
 	if routes := rt.byMethod[r.Method]; len(routes) > 0 {
+		if staticRoutes := rt.staticRoutes[r.Method]; len(staticRoutes) > 0 {
+			if index, ok := staticRoutes[normalizeRoutePath(path)]; ok {
+				rtRoute := &routes[index]
+				c.params = Params{}
+				c.paramsInjected = false
+				c.handlers = rtRoute.handlers
+				c.index = -1
+				c.stopped = false
+				c.Next()
+				return
+			}
+		}
+		view := newPathView(path)
 		for i := range routes {
 			rtRoute := &routes[i]
-			params, ok := matchPathSegs(rtRoute.segs, rtRoute.paramN, segs)
+			if rtRoute.paramN == 0 {
+				continue
+			}
+			params, ok := matchPathView(rtRoute.segs, rtRoute.paramN, &view)
 			if !ok {
 				continue
 			}
 			c.params = params
+			// Path params may be queried by pre-match middleware before the
+			// route is known; re-inject them now that they are available.
+			c.paramsInjected = false
 			c.handlers = rtRoute.handlers
 			c.index = -1
 			c.stopped = false
@@ -348,12 +379,13 @@ func (rt *Router) dispatchContext(c *Context) {
 	}
 
 	var allowed []string
+	view := newPathView(path)
 	for method, routes := range rt.byMethod {
 		if method == r.Method {
 			continue
 		}
 		for i := range routes {
-			if _, ok := matchPathSegs(routes[i].segs, routes[i].paramN, segs); ok {
+			if _, ok := matchPathView(routes[i].segs, routes[i].paramN, &view); ok {
 				allowed = append(allowed, method)
 				break
 			}
@@ -423,6 +455,16 @@ func joinPath(prefix, path string) string {
 	return prefix + path
 }
 
+func normalizeRoutePath(path string) string {
+	for len(path) > 0 && path[0] == '/' {
+		path = path[1:]
+	}
+	for len(path) > 0 && path[len(path)-1] == '/' {
+		path = path[:len(path)-1]
+	}
+	return path
+}
+
 func parsePattern(path string) ([]segment, error) {
 	parts := pathSegments(path)
 	out := make([]segment, len(parts))
@@ -471,6 +513,79 @@ func matchPathSegs(pattern []segment, paramN int, got []string) (Params, bool) {
 			continue
 		}
 		value, ok := parseParam(seg.typ, got[i])
+		if !ok {
+			return Params{}, false
+		}
+		if store == nil {
+			store = make([]Param, 0, paramN)
+		}
+		store = append(store, Param{Key: seg.name, ValueRaw: value})
+	}
+	return Params{Store: store}, true
+}
+
+const inlinePathSegments = 16
+
+// pathView is the segment layout of one request path. Segment bounds stay
+// inline so route matching neither allocates nor rescans the path per route.
+// Paths with more than inlinePathSegments segments fall back to pathSegments.
+type pathView struct {
+	path   string
+	starts [inlinePathSegments]int
+	ends   [inlinePathSegments]int
+	n      int
+	long   []string
+}
+
+func newPathView(path string) pathView {
+	var v pathView
+	p := normalizeRoutePath(path)
+	if p == "" {
+		return v
+	}
+	n := 1
+	for i := 0; i < len(p); i++ {
+		if p[i] == '/' {
+			n++
+		}
+	}
+	if n > inlinePathSegments {
+		v.path = p
+		v.long = pathSegments(p)
+		v.n = len(v.long)
+		return v
+	}
+	v.path = p
+	v.n = n
+	idx, start := 0, 0
+	for i := 0; i <= len(p); i++ {
+		if i == len(p) || p[i] == '/' {
+			v.starts[idx] = start
+			v.ends[idx] = i
+			idx++
+			start = i + 1
+		}
+	}
+	return v
+}
+
+func matchPathView(pattern []segment, paramN int, v *pathView) (Params, bool) {
+	if len(pattern) != v.n {
+		return Params{}, false
+	}
+	if v.long != nil {
+		return matchPathSegs(pattern, paramN, v.long)
+	}
+	var store []Param
+	for i, seg := range pattern {
+		raw := v.path[v.starts[i]:v.ends[i]]
+		if seg.name == "" {
+			if seg.static != raw {
+				return Params{}, false
+			}
+			continue
+		}
+		value, ok := parseParam(seg.typ, raw)
 		if !ok {
 			return Params{}, false
 		}

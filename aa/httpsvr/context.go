@@ -10,6 +10,7 @@ import (
 	"mime/multipart"
 	"net"
 	"net/http"
+	"net/url"
 	"strconv"
 	"sync"
 
@@ -270,6 +271,8 @@ type Context struct {
 	injectedBodies   map[string]any
 	injectedFiles    map[string][]*multipart.FileHeader
 	paramsInjected   bool
+	urlValues        url.Values
+	urlValuesParsed  bool
 
 	// DTO response (former httpsvr/response.Writer)
 	ErrorAsStatus     bool // response error as http status code
@@ -317,6 +320,8 @@ func acquireContext(w http.ResponseWriter, r *http.Request, params Params, handl
 	c.injectedBodies = nil
 	c.injectedFiles = nil
 	c.paramsInjected = false
+	c.urlValues = nil
+	c.urlValuesParsed = false
 	c.ErrorAsStatus = resolveErrorAsStatus(c)
 	c.SerializeTag = ""
 	c.serveContentTypes = nil
@@ -409,6 +414,8 @@ func (c *Context) Request() *http.Request { return c.r }
 func (c *Context) ResetRequest(r *http.Request) {
 	if r != nil {
 		c.r = r
+		c.urlValues = nil
+		c.urlValuesParsed = false
 	}
 }
 
@@ -446,10 +453,7 @@ func (c *Context) FullRequestURI() string {
 }
 
 func (c *Context) URLParam(key string) string {
-	if c.r == nil || c.r.URL == nil {
-		return ""
-	}
-	return c.r.URL.Query().Get(key)
+	return c.urlQueries().Get(key)
 }
 
 func (c *Context) FormValue(key string) string {

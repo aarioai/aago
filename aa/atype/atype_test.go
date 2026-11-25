@@ -1,10 +1,53 @@
 package atype_test
 
 import (
+	"net"
 	"testing"
 
 	"github.com/aarioai/aago/aa/atype"
 )
+
+func TestUnmarshalUint8s(t *testing.T) {
+	v, err := atype.UnmarshalUint8s([]byte(`[1, 2,3]`))
+	if err != nil {
+		t.Fatalf("UnmarshalUint8s: %v", err)
+	}
+	if len(v) != 3 || v[0] != 1 || v[1] != 2 || v[2] != 3 {
+		t.Fatalf("UnmarshalUint8s = %v", v)
+	}
+	if v, err = atype.UnmarshalUint8s([]byte("null")); err != nil || v != nil {
+		t.Fatalf("null => %v, %v", v, err)
+	}
+	if v, err = atype.UnmarshalUint8s([]byte("[]")); err != nil || len(v) != 0 {
+		t.Fatalf("[] => %v, %v", v, err)
+	}
+	for _, bad := range []string{`[1,x]`, `[1`, `[300]`} {
+		if _, err = atype.UnmarshalUint8s([]byte(bad)); err == nil {
+			t.Errorf("UnmarshalUint8s(%q) should fail", bad)
+		}
+	}
+}
+
+func TestIPOK(t *testing.T) {
+	var ip atype.IP
+	if ip.OK() {
+		t.Fatal("zero IP should not be OK")
+	}
+
+	// An invalid value is not an IP, even when its stored width is 16 bytes.
+	var invalid atype.IP
+	invalid.String = "0123456789abcdef"
+	if invalid.OK() {
+		t.Fatal("invalid IP should not be OK")
+	}
+
+	if err := ip.Scan([]byte(net.ParseIP("127.0.0.1").To4())); err != nil {
+		t.Fatal(err)
+	}
+	if !ip.OK() || !ip.Is4() || ip.To16() != "127.0.0.1" {
+		t.Fatalf("IPv4 IP = %+v", ip)
+	}
+}
 
 func TestAtype(t *testing.T) {
 	zero := atype.New()

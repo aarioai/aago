@@ -43,7 +43,7 @@ func parseUint64(method func(string, ...any) (*RawValue, *ae.Error), p string, r
 		}
 		return 0, nil
 	}
-	v, err := types.ParseUint64(s)
+	v, err := types.ParseUint64(s, bitSize)
 	if err != nil {
 		return 0, ae.NewBadParam(p)
 	}

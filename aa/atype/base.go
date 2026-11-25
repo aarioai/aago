@@ -1,28 +1,28 @@
 package atype
 
 import (
+	"bytes"
 	"encoding/json/jsontext"
 	"errors"
-	"github.com/aarioai/aago/pkg/types"
 	"strconv"
 )
 
 // MarshalUint8s converts a uint8 slice to a JSON array of numbers.
 // encoding/json/v2 represents []byte as Base64; this keeps a numeric array.
-func MarshalUint8s(bytes []uint8) (jsontext.Value, bool) {
-	if len(bytes) == 0 {
+func MarshalUint8s(v []uint8) (jsontext.Value, bool) {
+	if len(v) == 0 {
 		return nil, true
 	}
 
 	// Preallocate enough space
-	result := make([]byte, 0, len(bytes)*4+2)
+	result := make([]byte, 0, len(v)*4+2)
 	result = append(result, '[')
 
-	for i, v := range bytes {
+	for i, x := range v {
 		if i > 0 {
 			result = append(result, ',')
 		}
-		result = strconv.AppendUint(result, uint64(v), 10)
+		result = strconv.AppendUint(result, uint64(x), 10)
 	}
 
 	result = append(result, ']')
@@ -30,26 +30,35 @@ func MarshalUint8s(bytes []uint8) (jsontext.Value, bool) {
 }
 
 func UnmarshalUint8s(x jsontext.Value) ([]uint8, error) {
-	if x == nil || len(x) < 2 {
+	s := bytes.TrimSpace(x)
+	if len(s) == 0 || string(s) == "null" {
 		return nil, nil
 	}
+	if len(s) < 2 || s[0] != '[' || s[len(s)-1] != ']' {
+		return nil, errors.New("invalid uint8 json: " + string(s))
+	}
 
-	n := len(x) - 1 // remove last ']'
-	v := make([]uint8, 0)
-	for i := 1; i < n; {
-		for x[i] == ' ' || x[i] == ',' {
+	body := s[1 : len(s)-1]
+	v := make([]uint8, 0, 8)
+	for i := 0; i < len(body); {
+		for i < len(body) && (body[i] == ' ' || body[i] == ',' || body[i] == '\t' || body[i] == '\r' || body[i] == '\n') {
 			i++
 		}
-		if x[i] < '0' || x[i] > '9' {
-			return nil, errors.New("invalid uint8 json: " + string(x))
+		if i >= len(body) {
+			break
 		}
-		var c string
-		for x[i] >= '0' && x[i] <= '9' {
-			c += string(x[i])
+		start := i
+		for i < len(body) && body[i] >= '0' && body[i] <= '9' {
 			i++
 		}
-		u, _ := types.ParseUint8(c)
-		v = append(v, u)
+		if start == i {
+			return nil, errors.New("invalid uint8 json: " + string(s))
+		}
+		n, err := strconv.ParseUint(string(body[start:i]), 10, 8)
+		if err != nil {
+			return nil, err
+		}
+		v = append(v, uint8(n))
 	}
 	return v, nil
 }

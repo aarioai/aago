@@ -197,19 +197,23 @@ func (c *Context) findString(programData map[string]any, userData userDataInterf
 }
 func (c *Context) queryString(name string, patterns ...any) (string, *ae.Error) {
 	c.ensurePathParams()
-	var userData url.Values
-	if c.r != nil {
-		userData = c.r.URL.Query()
-	}
-	return c.findString(c.injectedQueries, userData, name, patterns...)
+	return c.findString(c.injectedQueries, c.urlQueries(), name, patterns...)
 }
 func (c *Context) query(name string, patterns ...any) (*RawValue, *ae.Error) {
 	c.ensurePathParams()
-	var userData url.Values
-	if c.r != nil {
-		userData = c.r.URL.Query()
+	return c.find(c.injectedQueries, c.urlQueries(), name, patterns...)
+}
+
+// urlQueries parses URL query values once per request.
+func (c *Context) urlQueries() url.Values {
+	if c.urlValuesParsed {
+		return c.urlValues
 	}
-	return c.find(c.injectedQueries, userData, name, patterns...)
+	c.urlValuesParsed = true
+	if c.r != nil {
+		c.urlValues = c.r.URL.Query()
+	}
+	return c.urlValues
 }
 
 func (c *Context) queries(programData map[string]any, userData map[string][]string) map[string]any {
@@ -238,11 +242,7 @@ func (c *Context) Query(key string, patterns ...any) (*RawValue, *ae.Error) {
 
 func (c *Context) Queries() map[string]any {
 	c.ensurePathParams()
-	var userData url.Values
-	if c.r != nil {
-		userData = c.r.URL.Query()
-	}
-	return c.queries(c.injectedQueries, userData)
+	return c.queries(c.injectedQueries, c.urlQueries())
 }
 func (c *Context) setPartialBodyData(data map[string][]string) {
 	if len(data) == 0 {
@@ -408,7 +408,7 @@ func (c *Context) header(key string, patterns ...any) (*RawValue, *ae.Error) {
 }
 
 func (c *Context) HeaderParam(key string, patterns ...any) (*RawValue, *ae.Error) {
-	return c.HeaderParam(key, patterns...)
+	return c.header(key, patterns...)
 }
 func (c *Context) HeaderFast(key string) string {
 	// false is required: it means required=false. The default required is true.

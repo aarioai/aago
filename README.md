@@ -4,9 +4,12 @@ AaGo 是基于 Go 标准库 `net/http` 的应用框架，其主要价值在于�
 
 AaGo aconfig 里面默认使用 Consul 进行服务注册和服务发现，并且推荐将 Redis 和 MongoDB 作为基础数据源。
 
-如果用户不想使用 MongoDB ，可以自行生成文件夹，或忽略通过 `aago-tool` 脚手架 `./cmd/cmd new <app 名称>` 生成的代码 mongodb 部分即可。
+如果用户不想使用 MongoDB ，可以自行生成文件夹，或忽略通过 `aago-tool` 脚手架 `./cmd <project_dir> new <app 名称>` 生成的代码即可。
 
 同时 AaGo Driver 项目（[https://github.com/aarioai/aago-driver](https://github.com/aarioai/aago-driver)），也提供了 MongoDB、MySQL、RabbitMQ、Redis 等驱动方法，方便开发者快捷操作。脚手架与 Demo 见独立仓库 [aago-tool](https://github.com/aarioai/aago-tool)。
+
+> 架构、HTTP 框架、配置、类型系统与性能说明见 [doc/README.md](doc/README.md)。
+> 使用 VS Code Copilot 时，框架技能位于 `.github/skills/aago-framework`。
 
 ## Demo 入门示例说明
 
@@ -61,12 +64,13 @@ AaGo（`github.com/aarioai/aago`）是基于 Go 标准库 `net/http` 的应用�
 aago/
 ├── aa/                 # 框架核心（本模块主要代码）
 ├── pkg/                # 通用工具库（无业务状态）
+├── doc/                # 架构与使用文档
+├── .github/skills/     # Copilot 技能（aago-framework）
 ├── aago-tool/
 │   ├── cmd/            # 脚手架与构建脚本（new project / app）
 │   └── demo/project/   # 示例：tutorial / simple / microservice
 ├── go.mod
 ├── README.md
-├── README_中文.md
 ```
 
 业务项目由 `cmd` 生成，典型结构：
@@ -327,7 +331,11 @@ flowchart BT
 
 ## 9. 相关文档
 
-- [README_中文.md](README.md) — 简介与 Demo 说明
-- [aa/httpsvr/README.md](aa/httpsvr/README.md) — 路由压测与压力测试
-- [cmd/README_说明.md](aago-tool/cmd/README_说明.md) — 脚手架用法
+- [doc/README.md](doc/README.md) — 文档索引与 5 分钟上手
+- [doc/architecture.md](doc/architecture.md) — 分层架构、请求生命周期、扩展点
+- [doc/httpsvr.md](doc/httpsvr.md) — Router / Context / 参数解析 / DTO 响应
+- [doc/aconfig.md](doc/aconfig.md) — YAML 配置、环境、Consul、gRPC resolver
+- [doc/atype.md](doc/atype.md) — 业务类型与枚举
+- [doc/performance.md](doc/performance.md) — 基准数据、优化记录、已知限制
+- [.github/skills/aago-framework/SKILL.md](.github/skills/aago-framework/SKILL.md) — Copilot 框架技能
 - 各项目 `router/README*.md` — UseRouter / Use / Done 约定

@@ -1,10 +1,10 @@
 package httpc
 
 import (
-	"context"
 	"io"
 	"net"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -13,14 +13,31 @@ var (
 	DefaultRequestTimeout = 10 * time.Second
 )
 
+var (
+	transportOnce   sync.Once
+	sharedTransport *http.Transport
+)
+
+// defaultTransport reuses connections across requests. DefaultDialTimeout is
+// read when the transport is first used; DefaultRequestTimeout is read per request.
+func defaultTransport() *http.Transport {
+	transportOnce.Do(func() {
+		sharedTransport = &http.Transport{
+			DialContext: (&net.Dialer{
+				Timeout:   DefaultDialTimeout,
+				KeepAlive: 30 * time.Second,
+			}).DialContext,
+			MaxIdleConns:        100,
+			MaxIdleConnsPerHost: 10,
+			IdleConnTimeout:     90 * time.Second,
+		}
+	})
+	return sharedTransport
+}
+
 func request(req *http.Request) (*http.Response, error) {
-	transport := http.Transport{
-		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			return net.DialTimeout(network, addr, DefaultDialTimeout)
-		},
-	}
 	cli := http.Client{
-		Transport: &transport,
+		Transport: defaultTransport(),
 		Timeout:   DefaultRequestTimeout,
 	}
 	return cli.Do(req)

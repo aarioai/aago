@@ -358,8 +358,12 @@ func ParseUint64(s string, bitSize ...int) (uint64, error) {
 // ParseSigned is a generic signed-integer parser.
 // @example ParseSigned[int8]("123", 10, 8)    ParseSigned[uint8]("123", 10, 8)
 func ParseSigned[T ~int8 | ~int16 | ~int32 | ~int | ~int64](s string, base int, bitSize int) (T, error) {
-	if num, ok := smallNumberKeys[s]; ok {
-		return T(num), nil
+	// The small-number table only holds base-10 values 0..255, so it may only
+	// answer when every cached value fits bitSize; otherwise strconv must check.
+	if base == 10 && (bitSize == 0 || bitSize > 8) {
+		if num, ok := smallNumberKeys[s]; ok {
+			return T(num), nil
+		}
 	}
 	v, err := strconv.ParseInt(s, base, bitSize)
 	return T(v), err
@@ -368,8 +372,11 @@ func ParseSigned[T ~int8 | ~int16 | ~int32 | ~int | ~int64](s string, base int, 
 // ParseUnsigned is a generic unsigned-integer parser.
 // @example ParseUnsigned[uint8]("123", 10, 8)    ParseUnsigned[uint16]("123", 10, 8)
 func ParseUnsigned[T ~uint8 | ~uint16 | ~uint32 | ~uint | ~uint64](s string, base int, bitSize int) (T, error) {
-	if num, ok := smallNumberKeys[s]; ok {
-		return T(num), nil
+	// 0..255 fits every unsigned width of at least 8 bits.
+	if base == 10 && (bitSize == 0 || bitSize >= 8) {
+		if num, ok := smallNumberKeys[s]; ok {
+			return T(num), nil
+		}
 	}
 	v, err := strconv.ParseUint(s, base, bitSize)
 	return T(v), err

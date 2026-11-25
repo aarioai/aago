@@ -20,8 +20,7 @@ func SetQueries(req *http.Request, params map[string]string) {
 }
 
 func SetHeaders(req *http.Request, headers []map[string]string) {
-	if len(headers) > 0 {
-		header := headers[1]
+	for _, header := range headers {
 		for k, v := range header {
 			req.Header.Set(k, v)
 		}
@@ -29,8 +28,7 @@ func SetHeaders(req *http.Request, headers []map[string]string) {
 }
 
 func AddHeaders(req *http.Request, headers []map[string]string) {
-	if len(headers) > 0 {
-		header := headers[1]
+	for _, header := range headers {
 		for k, v := range header {
 			req.Header.Add(k, v)
 		}

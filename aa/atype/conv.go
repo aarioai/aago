@@ -98,6 +98,10 @@ func Bool(d any) (bool, error) {
 	case bool:
 		return v, nil
 	case string:
+		// An absent parameter arrives as ""; it is false rather than a parse error.
+		if v == "" {
+			return false, nil
+		}
 		return strconv.ParseBool(v)
 	case Booln:
 		return v.Bool(), nil

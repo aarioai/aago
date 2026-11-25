@@ -206,6 +206,27 @@ func TestParseInt(t *testing.T) {
 		}
 	}
 }
+func TestParseIntegerBoundsAndBase(t *testing.T) {
+	if _, err := types.ParseInt8("200"); err == nil {
+		t.Error("ParseInt8(200) should report out of range")
+	}
+	if v, err := types.ParseInt8("127"); err != nil || v != 127 {
+		t.Errorf("ParseInt8(127) = %d, %v", v, err)
+	}
+	if v, err := types.ParseUint8("255"); err != nil || v != 255 {
+		t.Errorf("ParseUint8(255) = %d, %v", v, err)
+	}
+	if _, err := types.ParseInt64("200", 8); err == nil {
+		t.Error("ParseInt64(200, 8) should report out of range")
+	}
+	if v, err := types.ParseSigned[int]("10", 2, 64); err != nil || v != 2 {
+		t.Errorf("ParseSigned[int](10, base 2) = %d, %v; want 2", v, err)
+	}
+	if v, err := types.ParseUnsigned[uint64]("ff", 16, 64); err != nil || v != 255 {
+		t.Errorf("ParseUnsigned[uint64](ff, base 16) = %d, %v; want 255", v, err)
+	}
+}
+
 func TestConvertBase(t *testing.T) {
 	tests := []struct {
 		name     string

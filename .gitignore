@@ -1,4 +1,10 @@
-aago-tool
+# Golang Git Ignore File
+# https://github.com/aarioai/rules/blob/main/config/go.gitignore
+# 2026-11-25
+
+# Go test binaries (go test -cpuprofile writes them to the working directory)
+*.test
+*.exe
 
 # General Git Ignore File
 # https://github.com/aarioai/rules/blob/main/config/.gitignore

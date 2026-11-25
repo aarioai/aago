@@ -34,3 +34,32 @@ func TestParamsTypedGetters(t *testing.T) {
 		t.Fatalf("%d %q", rec.Code, rec.Body.String())
 	}
 }
+
+// Path parameters are injected as queries, even though UseRouter middleware runs
+// (and may read queries) before the route is matched.
+func TestPathParamsVisibleToQuery(t *testing.T) {
+	rt := NewRouter()
+	rt.UseRouter(func(c *Context) {
+		_ = c.QueryFast("uid")
+		c.Next()
+	})
+	rt.Get("/u/{uid:uint64}", func(c *Context) {
+		uid, e := c.QueryUint64("uid")
+		if e != nil {
+			t.Fatalf("QueryUint64(uid): %v", e)
+		}
+		if uid != 7 {
+			t.Fatalf("uid = %d", uid)
+		}
+		if s := c.QueryFast("uid"); s != "7" {
+			t.Fatalf("QueryFast(uid) = %q", s)
+		}
+		c.WriteString("ok")
+	})
+
+	rec := httptest.NewRecorder()
+	rt.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/u/7", nil))
+	if rec.Code != http.StatusOK || rec.Body.String() != "ok" {
+		t.Fatalf("%d %q", rec.Code, rec.Body.String())
+	}
+}

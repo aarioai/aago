@@ -71,7 +71,6 @@ func TestPrimitiveType(t *testing.T) {
 func TestPrimitiveType2(t *testing.T) {
 	type y struct {
 		Tmp FakeImgSrc  `json:"-"`
-		t   FakeImgSrc  `json:"images"`
 		Y   *int        `json:"y"`
 		Img *FakeImgSrc `json:"img"`
 	}

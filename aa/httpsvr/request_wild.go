@@ -1,7 +1,7 @@
 package httpsvr
 
 import (
-		"strings"
+	"strings"
 )
 
 // HeaderWild reads a header from the raw name, the canonical name, and an X- prefix.

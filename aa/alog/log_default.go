@@ -44,6 +44,15 @@ func (l *xlog) print(ctx context.Context, level ErrorLevel, caller string, msg s
 	}
 	log.Println(packMessage(ctx, level, caller, msg))
 }
+
+// log drops disabled levels before paying for the caller lookup.
+// utils.Caller skips aago frames, so the extra frame here does not change the reported caller.
+func (l *xlog) log(ctx context.Context, level ErrorLevel, msg string) {
+	if level > l.Level {
+		return
+	}
+	l.print(ctx, level, utils.Caller(2), msg)
+}
 func (l *xlog) New(prefix string, f func(context.Context, string, ...any), suffix ...string) func(context.Context, string, ...any) {
 	var s string
 	if len(suffix) > 0 {
@@ -57,39 +66,57 @@ func (l *xlog) New(prefix string, f func(context.Context, string, ...any), suffi
 	}
 }
 func (l *xlog) Debug(ctx context.Context, msg string) {
-	l.print(ctx, LevelDebug, utils.Caller(1), msg)
+	l.log(ctx, LevelDebug, msg)
 }
 func (l *xlog) Debugf(ctx context.Context, msg string, args ...any) {
-	l.print(ctx, LevelDebug, utils.Caller(1), fmt.Sprintf(msg, args...))
+	if LevelDebug > l.Level {
+		return
+	}
+	l.log(ctx, LevelDebug, fmt.Sprintf(msg, args...))
 }
 
 func (l *xlog) Info(ctx context.Context, msg string) {
-	l.print(ctx, LevelInfo, utils.Caller(1), msg)
+	l.log(ctx, LevelInfo, msg)
 }
 
 func (l *xlog) Infof(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelInfo, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelInfo > l.Level {
+		return
+	}
+	l.log(ctx, LevelInfo, fmt.Sprintf(format, args...))
 }
 func (l *xlog) Notice(ctx context.Context, msg string) {
-	l.print(ctx, LevelNotice, utils.Caller(1), msg)
+	l.log(ctx, LevelNotice, msg)
 }
 func (l *xlog) Noticef(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelNotice, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelNotice > l.Level {
+		return
+	}
+	l.log(ctx, LevelNotice, fmt.Sprintf(format, args...))
 }
 func (l *xlog) Warn(ctx context.Context, format string) {
-	l.print(ctx, LevelWarn, utils.Caller(1), format)
+	l.log(ctx, LevelWarn, format)
 }
 func (l *xlog) Warnf(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelWarn, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelWarn > l.Level {
+		return
+	}
+	l.log(ctx, LevelWarn, fmt.Sprintf(format, args...))
 }
 
 func (l *xlog) Error(ctx context.Context, msg string) {
-	l.print(ctx, LevelError, utils.Caller(1), msg)
+	l.log(ctx, LevelError, msg)
 }
 func (l *xlog) Errorf(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelError, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelError > l.Level {
+		return
+	}
+	l.log(ctx, LevelError, fmt.Sprintf(format, args...))
 }
 func (l *xlog) E(ctx context.Context, e *ae.Error, msg ...any) {
+	if e == nil || LevelError > l.Level {
+		return
+	}
 	s := e.String()
 	if len(msg) > 0 {
 		s = fmt.Sprint(msg...)
@@ -98,27 +125,36 @@ func (l *xlog) E(ctx context.Context, e *ae.Error, msg ...any) {
 }
 
 func (l *xlog) Fatal(ctx context.Context, msg string) {
-	l.print(ctx, LevelFatal, utils.Caller(1), msg)
+	l.log(ctx, LevelFatal, msg)
 }
 
 func (l *xlog) Fatalf(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelFatal, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelFatal > l.Level {
+		return
+	}
+	l.log(ctx, LevelFatal, fmt.Sprintf(format, args...))
 }
 
 func (l *xlog) Alert(ctx context.Context, msg string) {
-	l.print(ctx, LevelAlert, utils.Caller(1), msg)
+	l.log(ctx, LevelAlert, msg)
 }
 
 func (l *xlog) Alertf(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelAlert, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelAlert > l.Level {
+		return
+	}
+	l.log(ctx, LevelAlert, fmt.Sprintf(format, args...))
 }
 
 func (l *xlog) Emerg(ctx context.Context, msg string) {
-	l.print(ctx, LevelEmerg, utils.Caller(1), msg)
+	l.log(ctx, LevelEmerg, msg)
 }
 
 func (l *xlog) Emergf(ctx context.Context, format string, args ...any) {
-	l.print(ctx, LevelEmerg, utils.Caller(1), fmt.Sprintf(format, args...))
+	if LevelEmerg > l.Level {
+		return
+	}
+	l.log(ctx, LevelEmerg, fmt.Sprintf(format, args...))
 }
 
 func (l *xlog) Print(ctx context.Context, msg string) {
