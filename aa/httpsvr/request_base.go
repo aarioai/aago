@@ -110,7 +110,7 @@ func (v *RawValue) ReleaseValidate(patterns []any) *ae.Error {
 func (v *RawValue) Validate(patterns []any) *ae.Error {
 	if v.IsEmpty() {
 		if defaultVal := findDefaultValue(patterns); defaultVal != nil {
-			v.Reload(defaultVal)
+			v.Set(defaultVal)
 		}
 	}
 	required, re, e := parseValidationRules(v.name, patterns)
@@ -375,7 +375,7 @@ func (c *Context) Body(key string, patterns ...any) (*RawValue, *ae.Error) {
 	}
 	if c.injectedBodies != nil {
 		if v, ok := c.injectedBodies[key]; ok {
-			raw.Reload(v)
+			raw.Set(v)
 		}
 	}
 	return raw, raw.Validate(patterns)

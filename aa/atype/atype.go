@@ -50,8 +50,8 @@ func (p *Atype) Raw() any {
 	return p.raw
 }
 
-// Reload replaces the stored data
-func (p *Atype) Reload(v any) *Atype {
+// Set sets the stored data
+func (p *Atype) Set(v any) *Atype {
 	p.raw = v
 	return p
 }

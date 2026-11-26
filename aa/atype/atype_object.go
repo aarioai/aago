@@ -66,7 +66,7 @@ func (p *Atype) Ints() ([]int, bool) {
 		newV := New()
 		defer newV.Close()
 		for i, item := range v {
-			newV.Reload(item)
+			newV.Set(item)
 			val, err := newV.Int()
 			if err != nil {
 				return nil, false
@@ -92,7 +92,7 @@ func (p *Atype) Uints() ([]uint, bool) {
 		newV := New()
 		defer newV.Close()
 		for i, item := range v {
-			val, err := newV.Reload(item).Uint()
+			val, err := newV.Set(item).Uint()
 			if err != nil {
 				return nil, false
 			}
@@ -118,7 +118,7 @@ func (p *Atype) Int64s() ([]int64, bool) {
 		newV := New()
 		defer newV.Close()
 		for i, item := range v {
-			val, err := newV.Reload(item).Int64()
+			val, err := newV.Set(item).Int64()
 			if err != nil {
 				return nil, false
 			}
@@ -144,7 +144,7 @@ func (p *Atype) Uint64s() ([]uint64, bool) {
 		newV := New()
 		defer newV.Close()
 		for i, item := range v {
-			val, err := newV.Reload(item).Uint64()
+			val, err := newV.Set(item).Uint64()
 			if err != nil {
 				return nil, false
 			}
@@ -170,7 +170,7 @@ func (p *Atype) Float32s() ([]float32, bool) {
 		newV := New()
 		defer newV.Close()
 		for i, item := range v {
-			val, err := newV.Reload(item).Float32()
+			val, err := newV.Set(item).Float32()
 			if err != nil {
 				return nil, false
 			}
@@ -195,7 +195,7 @@ func (p *Atype) Float64s() ([]float64, bool) {
 		newV := New()
 		defer newV.Close()
 		for i, item := range v {
-			val, err := newV.Reload(item).Float64()
+			val, err := newV.Set(item).Float64()
 			if err != nil {
 				return nil, false
 			}

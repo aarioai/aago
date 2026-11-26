@@ -121,7 +121,7 @@ func (t NullUint16s) Uint16s() []uint16 {
 	newV := New()
 	defer newV.Close()
 	for i, x := range v {
-		w[i] = newV.Reload(x).DefaultUint16(0)
+		w[i] = newV.Set(x).DefaultUint16(0)
 	}
 	return w
 }
@@ -156,7 +156,7 @@ func (t NullUint24s) Uint24s() []Uint24 {
 	newV := New()
 	defer newV.Close()
 	for i, x := range v {
-		w[i] = newV.Reload(x).DefaultUint24(0)
+		w[i] = newV.Set(x).DefaultUint24(0)
 	}
 	return w
 }
@@ -191,7 +191,7 @@ func (t NullUint32s) Uint32s() []uint32 {
 	newV := New()
 	defer newV.Close()
 	for i, x := range v {
-		w[i] = newV.Reload(x).DefaultUint32(0)
+		w[i] = newV.Set(x).DefaultUint32(0)
 	}
 	return w
 }
@@ -226,7 +226,7 @@ func (t NullInts) Ints() []int {
 	newV := New()
 	defer newV.Close()
 	for i, x := range v {
-		w[i] = newV.Reload(x).DefaultInt(0)
+		w[i] = newV.Set(x).DefaultInt(0)
 	}
 	return w
 }
@@ -261,7 +261,7 @@ func (t NullUints) Uints() []uint {
 	newV := New()
 	defer newV.Close()
 	for i, x := range v {
-		w[i] = newV.Reload(x).DefaultUint(0)
+		w[i] = newV.Set(x).DefaultUint(0)
 	}
 	return w
 }
@@ -298,7 +298,7 @@ func (t NullUint64s) Uint64s() []uint64 {
 	newV := New()
 	defer newV.Close()
 	for i, x := range v {
-		w[i] = newV.Reload(x).DefaultUint64(0)
+		w[i] = newV.Set(x).DefaultUint64(0)
 	}
 	return w
 }

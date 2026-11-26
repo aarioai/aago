@@ -56,7 +56,7 @@ func TestAtype(t *testing.T) {
 		t.Errorf("String() should return empty string")
 	}
 	b := 234242342342423.3
-	s := zero.Reload(b).String()
+	s := zero.Set(b).String()
 	if s != "234242342342423.3" {
 		t.Errorf("float64(%f) ==> string(%s)", b, s)
 	}
