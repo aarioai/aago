@@ -2,6 +2,7 @@ package types
 
 import (
 	"log"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -10,30 +11,37 @@ import (
 // Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
 // A duration string is a possibly signed sequence of decimal numbers,
 // each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m".
-func ParseDuration(s string, defaultValue ...time.Duration) time.Duration {
-	var dv time.Duration
-	if len(defaultValue) > 0 {
-		dv = defaultValue[0]
+func ParseDuration(s string) (time.Duration, error) {
+	s = strings.TrimSpace(s)
+	if s == "" || s == "0" || s == "0ns" || s == "0us" || s == "0µs" || s == "0ms" || s == "0s" || s == "0m" || s == "0h" {
+		return 0, nil
 	}
-	if s == "" {
-		return dv
-	}
-	d, err := time.ParseDuration(s)
+	return time.ParseDuration(s)
+}
+
+func ParseDurationWithDefault(s string, defaultValue time.Duration) time.Duration {
+	d, err := ParseDuration(s)
 	if err != nil {
 		log.Println("[error] invalid time duration: " + s)
-		return dv
+		return defaultValue
 	}
 	return d
 }
 
-// StringifyDuration stringifies time duration to a duration string
+// StringifyDuration stringifies time duration to a duration string and trim end zeroes.
 func StringifyDuration(d time.Duration) string {
 	s := d.String()
-	if strings.HasSuffix(s, "m0s") {
-		s = s[:len(s)-2]
+	if !strings.Contains(s, "0") {
+		return s
 	}
-	if strings.HasSuffix(s, "h0m") {
-		s = s[:len(s)-2]
+	var durationPartRe = regexp.MustCompile(`([0-9.]+)(ns|µs|us|ms|s|m|h)`)
+	parts := durationPartRe.FindAllStringSubmatch(s, -1)
+	for len(parts) > 1 && parts[len(parts)-1][1] == "0" {
+		parts = parts[:len(parts)-1]
 	}
-	return s
+	var b strings.Builder
+	for _, p := range parts {
+		b.WriteString(p[0])
+	}
+	return b.String()
 }
