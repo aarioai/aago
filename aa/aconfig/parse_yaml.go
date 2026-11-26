@@ -239,7 +239,13 @@ func (c *Config) Reload() error {
 	if err != nil {
 		return err
 	}
-	textConfigs, err := c.loadAllTextConfigs(data[CkTextConfigDirs])
+	var cd string
+	for _, d := range ckTextConfigDirs {
+		if cd, ok := data[d]; ok && cd != "" {
+			break
+		}
+	}
+	textConfigs, err := c.loadAllTextConfigs(cd)
 	if err != nil {
 		return err
 	}
@@ -300,6 +306,15 @@ func (c *Config) GetString(key string, defaultValue ...string) string {
 		v = defaultValue[0]
 	}
 	return v
+}
+
+func (c *Config) GetWithFallback(keys ...string) string {
+	for _, key := range keys {
+		if v := c.GetString(key); v != "" {
+			return v
+		}
+	}
+	return ""
 }
 
 func (c *Config) MustGet(key string) (*atype.Atype, error) {

@@ -16,7 +16,7 @@ cfg, err := aconfig.New("config/app.yaml", nil)
 1. 读取 YAML → 递归展开成 **点分键**（`app.http.port`）。
 2. 若有 `text_config_dirs`，加载目录中的文本文件（密钥、证书等）。
 3. 应用 `valueProcessor`。
-4. `initializeConfig()`：解析 `env`、`mock`、`time_format`、`timezone_id`；设置 `time.Local`。
+4. `initializeConfig()`：解析 `env`、`mock`、`time_format`、`timezone`；设置 `time.Local`。
 
 ## 2. YAML 结构与 DEFAULT 继承
 
@@ -57,7 +57,7 @@ app:
 | `mock` | 是否 mock 模式 |
 | `text_config_dirs` | 空格分隔的文本配置目录 |
 | `time_format` | 默认 `2006-02-01 15:04:05` |
-| `timezone_id` | IANA 时区，如 `Asia/Shanghai` |
+| `timezone` | IANA 时区，如 `Asia/Shanghai` |
 
 ## 3. 读取 API
 

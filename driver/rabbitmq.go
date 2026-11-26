@@ -19,10 +19,10 @@ const (
 )
 
 type RabbitmqConfig struct {
-	ConnectionOptions rabbitmq.Config
-	ReconnectInterval time.Duration
+	BaseReconnectInterval time.Duration
+	ConnectionOptions     rabbitmq.Config
 
-	Host     string
+	Addr     string
 	User     string
 	Password string
 }
@@ -43,17 +43,20 @@ func NewRabbitmq(app *aa.App, section string, tlsConfig *tls.Config, sasl []amqp
 		rabbitmq.WithConnectionOptionsLogger(NewRabbitMQLogger(app.Log)),
 		rabbitmq.WithConnectionOptionsConfig(c.ConnectionOptions),
 	}
-	if c.ReconnectInterval > 0 {
-		defaultOpts = append(defaultOpts, rabbitmq.WithConnectionOptionsBaseReconnectInterval(c.ReconnectInterval))
+	if c.BaseReconnectInterval > 0 {
+		defaultOpts = append(defaultOpts, rabbitmq.WithConnectionOptionsBaseReconnectInterval(c.BaseReconnectInterval))
+
 	}
 
 	if len(opts) > 0 {
 		defaultOpts = append(defaultOpts, opts...)
 	}
+	app.Log.Infof(app.GlobalContext, "connect rabbitmq: %s@%s %s", c.User, c.Addr, c.ConnectionOptions.Vhost)
 	conn, err := rabbitmq.NewConn(c.Url(), defaultOpts...)
 	if err != nil {
 		return nil, NewRabbitmqError(err)
 	}
+
 	return conn, nil
 }
 
@@ -96,7 +99,7 @@ func CloseRabbitmqPool() {
 }
 
 func ParseRabbitmqConfig(app *aa.App, section string, tlsConfig *tls.Config, sasl []amqp091.Authentication) (RabbitmqConfig, error) {
-	host, err1 := tryGetSectionCfgWithFallback(app, RABBITMQ, section, "host", "Host")
+	addr, err1 := tryGetSectionCfgWithFallback(app, RABBITMQ, section, "addr", "Addr")
 	user, err2 := tryGetSectionCfgWithFallback(app, RABBITMQ, section, "user", "User", "username", "Username")
 	password, err3 := tryGetSectionCfgWithFallback(app, RABBITMQ, section, "passwd", "Passwd", "password", "Password")
 	if err := ae.FirstError(err1, err2, err3); err != nil {
@@ -106,7 +109,7 @@ func ParseRabbitmqConfig(app *aa.App, section string, tlsConfig *tls.Config, sas
 	channelMax := getSectionCfgWithFallback(app, RABBITMQ, section, "channelMax", "ChannelMax", "channel_max")
 	frameSize := getSectionCfgWithFallback(app, RABBITMQ, section, "frameSize", "FrameSize", "frame_size")
 	heartbeat, err4 := getSectionCfgDurationWithFallback(app, RABBITMQ, section, "heartbeat", "Heartbeat")
-	reconnectInterval, err5 := getSectionCfgDurationWithFallback(app, RABBITMQ, section, "reconnectInterval", "ReconnectInterval", "reconnect_interval")
+	baseReconnectInterval, err5 := getSectionCfgDurationWithFallback(app, RABBITMQ, section, "baseReconnectInterval", "BaseReconnectInterval", "base_reconnect_interval")
 	if err := ae.FirstError(err4, err5); err != nil {
 		return RabbitmqConfig{}, err
 	}
@@ -122,13 +125,13 @@ func ParseRabbitmqConfig(app *aa.App, section string, tlsConfig *tls.Config, sas
 		Heartbeat:       heartbeat,                  // less than 1s uses the server's interval
 		TLSClientConfig: tlsConfig,
 		Properties:      nil,
-		Locale:          app.Config.TimezoneID,
+		Locale:          app.Config.TimeLocation.String(),
 	}
 	c := RabbitmqConfig{
-		ConnectionOptions: amqpConfig,
-		ReconnectInterval: reconnectInterval,
+		BaseReconnectInterval: baseReconnectInterval,
+		ConnectionOptions:     amqpConfig,
 
-		Host:     host,
+		Addr:     addr,
 		User:     user,
 		Password: password,
 	}
@@ -137,7 +140,7 @@ func ParseRabbitmqConfig(app *aa.App, section string, tlsConfig *tls.Config, sas
 func (c RabbitmqConfig) Url() string {
 	u := url.URL{
 		Scheme: "amqp",
-		Host:   c.Host,
+		Host:   c.Addr,
 		Path:   c.ConnectionOptions.Vhost,
 	}
 	if c.User != "" || c.Password != "" {

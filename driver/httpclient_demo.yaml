@@ -1,22 +1,24 @@
+timezone: Asia/Singapore
+
 httpclient:
-  timeout: "0s" # The timeout includes connection time, any redirects, and reading the response body.
-  dialTimeout: "0s" # net.Dialer. The default is no timeout.
+  timeout: 0s # The timeout includes connection time, any redirects, and reading the response body.
+  dialTimeout: 0s # net.Dialer. The default is no timeout.
   dialDualStack: false
-  dialFallbackDelay: "0s"
-  dialKeepAlive: "0s"
+  dialFallbackDelay: 0s
+  dialKeepAlive: 0s
   dialKeepAliveEnable: false # If Enable is true, keep-alive probes are enabled.
   dialKeepAliveIdle: "15s" # If zero, a default value of 15 seconds is used.
   dialKeepAliveInterval: "15s" # If zero, a default value of 15 seconds is used.
   dialKeepAliveCount: 9 # If zero, a default value of 9 is used.
-  tlsHandshakeTimeout: "0s" # Zero means no timeout.
+  tlsHandshakeTimeout: 0s # Zero means no timeout.
   disableKeepAlives: false
   disableCompression: false
   maxIdleConns: 0 # Zero means no limit.
   maxIdleConnsPerHost: 0 # If zero, http.DefaultMaxIdleConnsPerHost is used.
   maxConnsPerHost: 0 # Zero means no limit.
-  idleConnTimeout: "0s" # Zero means no limit.
-  responseHeaderTimeout: "0s"
-  expectContinueTimeout: "0s" # Zero means no timeout and causes the body to be sent immediately, without waiting for the server to approve.
+  idleConnTimeout: 0s # Zero means no limit.
+  responseHeaderTimeout: 0s
+  expectContinueTimeout: 0s # Zero means no timeout and causes the body to be sent immediately, without waiting for the server to approve.
   maxResponseHeaderBytes: 0 # Zero means to use a default limit.
   writeBufferSize: 0 # If zero, a default (currently 4KB) is used.
   readBufferSize: 0 # If zero, a default (currently 4KB) is used.

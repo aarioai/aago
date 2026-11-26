@@ -36,7 +36,7 @@ Launch Config:
 		execPath,
 		utils.GitVersion(),
 		c.Env,
-		c.TimezoneID,
+		c.Timezone,
 		c.Mock,
 	)
 	alog.Console(info, afmt.Green)

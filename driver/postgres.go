@@ -63,7 +63,7 @@ func NewPostgres(app *aa.App, section string) (string, *pgxpool.Pool, *ae.Error)
 	if err != nil {
 		return "", nil, ae.NewErr(err)
 	}
-	alog.Printf("connect postgres: %s@%s %s", f.Config.ConnConfig.User, postgresEndpoint(f.Config.ConnConfig), f.Config.ConnConfig.Database)
+	app.Log.Infof(app.GlobalContext, "connect postgres: %s@%s %s", f.Config.ConnConfig.User, postgresEndpoint(f.Config.ConnConfig), f.Config.ConnConfig.Database)
 	// pgxpool 不会立即建立数据库连接（除非 MinConns > 0），需要立即验证连接时请调用 Ping
 	pool, err := pgxpool.NewWithConfig(context.Background(), f.Config)
 	if err != nil {
@@ -196,7 +196,7 @@ func buildPostgresDSN(app *aa.App, section string) (string, error) {
 	if v := getSectionCfgWithFallback(app, POSTGRESQL, section, "searchPath", "SearchPath", "search_path"); v != "" {
 		query.Set("search_path", v)
 	}
-	query.Set("timezone", app.Config.TimeLocation.String())
+	query.Set("timezone", app.Config.Timezone)
 
 	u.RawQuery = query.Encode()
 	return u.String(), nil

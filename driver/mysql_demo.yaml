@@ -2,7 +2,7 @@ mysql:
   DEFAULT:
     user: Aario
     password: Luexu.com
-    net: tcp  # (e.g. "tcp", "tcp6", "unix". default: "tcp")
+    net: tcp  # alias to net. (e.g. "tcp", "tcp6", "unix". default: "tcp")
     addr: 127.0.0.1:3306  # (default: "127.0.0.1:3306" for "tcp" and "/tmp/mysql.sock" for "unix")
     # db: <default to section name>
     connAttributes: ""  # comma-delimited string of user-defined "key:value" pairs

@@ -6,6 +6,7 @@ import (
 	"maps"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -45,21 +46,27 @@ func (c *Config) endWrite() {
 }
 
 func (c *Config) initializeConfig() error {
-	c.Env = NewEnv(c.GetString(CkEnv))
-	c.Mock, _ = c.Get(CkMock).ReleaseBool()
-	c.TextConfigDirs = textConfigDirs(c.GetString(CkTextConfigDirs))
+	c.Env = NewEnv(c.GetWithFallback(ckEnv...))
+	mock := c.GetWithFallback(ckMock...)
+	if mock != "" && mock != "false" {
+		c.Mock, _ = strconv.ParseBool(mock)
+	}
+	c.TextConfigDirs = textConfigDirs(c.GetWithFallback(ckTextConfigDirs...))
 	return c.initializeTimezone()
 }
 
 func (c *Config) initializeTimezone() error {
 	var err error
-
-	c.TimeFormat = c.GetString(CkTimeFormat, "2006-02-01 15:04:05")
-	c.TimezoneID, _ = time.Now().Zone()
+	tf := c.GetWithFallback(ckTimeFormat...)
+	if tf == "" {
+		tf = "2006-02-01 15:04:05"
+	}
+	c.TimeFormat = tf
+	c.Timezone, _ = time.Now().Zone()
 	c.TimeLocation = time.Local
 
-	if tz := c.GetString(CkTimezoneID); tz != "" {
-		c.TimezoneID = tz
+	if tz := c.GetWithFallback(ckTimezone...); tz != "" {
+		c.Timezone = tz
 		if c.TimeLocation, err = time.LoadLocation(tz); err != nil {
 			return fmt.Errorf("invalid timezone %s: %w", tz, err)
 		}

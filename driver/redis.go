@@ -27,6 +27,7 @@ func NewRedis(app *aa.App, section string) (*redis.Client, *ae.Error) {
 	if err != nil {
 		return nil, newConfigError(REDIS, section, err)
 	}
+	app.Log.Infof(app.GlobalContext, "connect redis: %s", opts.Addr)
 	return redis.NewClient(opts), nil
 }
 

@@ -131,6 +131,7 @@ func NewInfluxdb(app *aa.App, section string, defaultTags map[string]string) (in
 	if e != nil {
 		return nil, "", "", e
 	}
+	app.Log.Infof(app.GlobalContext, "connect influxdb: %s@%s %s/%s", c.Auth, c.URL, c.Org, c.Bucket)
 
 	opts := c.Options(defaultTags)
 	opts.SetHTTPClient(httpClient)

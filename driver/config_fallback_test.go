@@ -42,11 +42,11 @@ func TestParseRabbitmqConfigFallback(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if config.Host != "127.0.0.1:5672" || config.User != "replace-with-your-username" ||
+	if config.Addr != "127.0.0.1:5672" || config.User != "replace-with-your-username" ||
 		config.ConnectionOptions.Vhost != "/events" ||
 		config.ConnectionOptions.ChannelMax != 2047 ||
 		config.ConnectionOptions.Heartbeat != 15*time.Second ||
-		config.ReconnectInterval != 5*time.Second {
+		config.BaseReconnectInterval != 5*time.Second {
 		t.Errorf("RabbitMQ config = %#v", config)
 	}
 }

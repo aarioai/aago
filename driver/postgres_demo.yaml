@@ -1,3 +1,5 @@
+timezone: Asia/Singapore
+
 postgresql:
   DEFAULT:
     user: Aario

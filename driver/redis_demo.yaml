@@ -1,10 +1,10 @@
 redis:
   DEFAULT:
     net: tcp # alias to network, default: "tcp"
+    protocol: 3 #  Protocol 2 or 3. Use the version to negotiate RESP version with redis-server.
     addr: 127.0.0.1:6379  # host:port
     nodeAddr: "" # default to addr
     clientName: "" # execute the `CLIENT SETNAME ClientName` command for each conn.
-    protocol: 3 #  Protocol 2 or 3. Use the version to negotiate RESP version with redis-server.
     user: replace-with-your-username  # alias to username
     password: replace-with-your-password
     authEmptyPassword: false
@@ -30,10 +30,10 @@ redis:
     minIdleConns: 0
     maxIdleConns: 0
     maxActiveConns: 0
-    connMaxIdleTime: "30m"
-    connMaxLifetime: "0s"
-    connMaxLifetimeJitter: "0s"
-    connMaxLifetimeReapInterval: "0s"
+    connMaxIdleTime: 30m
+    connMaxLifetime: 0s
+    connMaxLifetimeJitter: 0s
+    connMaxLifetimeReapInterval: 0s
     disableIdentity: false
     identitySuffix: "" # add suffix to client name.
     unstableResp3: false
@@ -41,7 +41,7 @@ redis:
     clientSideCacheStrategy: 0
     clientSideCacheRefreshOnInvalidate: 0
     clientSideCacheCoalesceMisses: false
-    clientSideCacheInvalidationBatchWindow: "0s"
+    clientSideCacheInvalidationBatchWindow: 0s
 
   cache:
     db: 2

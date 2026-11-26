@@ -18,7 +18,7 @@ cfg, err := aconfig.New(path, func(key, value string) (string, error) {
 | `mock` | mock 模式 |
 | `text_config_dirs` | 空格分隔的文本配置目录 |
 | `time_format` | 默认 `2006-02-01 15:04:05` |
-| `timezone_id` | IANA 时区，设置后同时修改 `time.Local` |
+| `timezone` | IANA 时区，设置后同时修改 `time.Local` |
 
 ## YAML 展开规则
 

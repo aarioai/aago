@@ -61,7 +61,7 @@ func NewMysql(app *aa.App, section string) (string, *sql.DB, *ae.Error) {
 	if err != nil {
 		return "", nil, newConfigError(MYSQL, section, err)
 	}
-	alog.Printf("connect mysql: %s@%s %s", f.Config.User, f.Config.Addr, f.Config.DBName)
+	app.Log.Infof(app.GlobalContext, "connect mysql: %s@%s %s", f.Config.User, f.Config.Addr, f.Config.DBName)
 	dsn := f.Config.FormatDSN()
 	// sqlx.Open并不会立即建立一个数据库的网络连接, 也不会对数据库链接参数的合法性做检验, 它仅仅是初始化一个sql.DB对象. 当真正进行第一次数据库查询操作时, 此时才会真正建立网络连接;
 	// sqlx.Open返回的sql.DB对象是协程并发安全的.

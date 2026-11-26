@@ -1,6 +1,7 @@
 package driver_test
 
 import (
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -195,7 +196,8 @@ func TestPostgresDSNEncodesCredentials(t *testing.T) {
 		t.Fatal(e)
 	}
 	dsn := f.Config.ConnString()
-	want := "postgres://Aario:Luexu.com@127.0.0.1:5432/test?connect_timeout=5&sslmode=prefer&timezone=Local"
+	tz := url.QueryEscape(app.Config.Timezone)
+	want := "postgres://Aario:Luexu.com@127.0.0.1:5432/test?connect_timeout=5&sslmode=prefer&timezone=" + tz
 	if dsn != want {
 		t.Errorf("PostgreSQL DSN = %q, want %q", dsn, want)
 	}

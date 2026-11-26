@@ -2,7 +2,7 @@ env: debug
 debug: 1
 rsa_root: /tmp
 mock: true
-timezone_id: Asia/Shanghai
+timezone: Asia/Shanghai
 
 default:
   time: "2024-11-15 15:04:05"

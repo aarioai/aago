@@ -1,25 +1,23 @@
 package aconfig
 
 import (
-	"github.com/hashicorp/consul/api"
 	"io/fs"
 	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
-)
 
-// Reserved configuration keys
-const (
-	CkEnv            = "env"
-	CkMock           = "mock"
-	CkTextConfigDirs = "text_config_dirs" // space-separated
-	CkTimeFormat     = "time_format"
-	CkTimezoneID     = "timezone_id"
+	"github.com/hashicorp/consul/api"
 )
 
 var (
 	cfgMtx sync.RWMutex
+
+	ckEnv            = []string{"env", "Env", "ENV"}
+	ckMock           = []string{"mock", "Mock", "MOCK"}
+	ckTimeFormat     = []string{"timeFormat", "TimeFormat", "time_format", "TIME_FORMAT"}
+	ckTimezone       = []string{"timezone", "timeZone", "Timezone", "TimeZone", "TIMEZONE"}
+	ckTextConfigDirs = []string{"textConfigDirs", "TextConfigDirs", "text_config_dirs", "TEXT_CONFIG_DIRS"}
 )
 
 type Snapshot struct {
@@ -38,7 +36,7 @@ type Config struct {
 	Mock           bool // using mock
 	TextConfigDirs []string
 	TimeFormat     string // e.g. "2006-02-01 15:04:05"
-	TimezoneID     string // e.g. "Asia/Shanghai"
+	Timezone       string // e.g. "Asia/Shanghai"
 	TimeLocation   *time.Location
 
 	onWrite     atomic.Bool
@@ -55,7 +53,7 @@ type Config struct {
 func New(path string, valueProcessor func(key string, value string) (string, error)) (*Config, error) {
 	cfg := &Config{
 		TimeFormat:     "2006-02-01 15:04:05",
-		TimezoneID:     time.Local.String(),
+		Timezone:       time.Local.String(),
 		TimeLocation:   time.Local,
 		path:           path,
 		baseConfig:     make(map[string]string),

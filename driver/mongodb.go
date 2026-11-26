@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"strings"
 	"sync"
 	"time"
 
@@ -112,6 +111,8 @@ func NewMongodb(app *aa.App, section string) (*mongo.Client, string, *ae.Error) 
 	if err != nil {
 		return nil, "", newConfigError(MONGODB, section, err)
 	}
+
+	app.Log.Infof(app.GlobalContext, "connect mongodb: %s@%s %s", o.Credential.Username, o.Hosts, o.DB)
 	opts := o.ClientOptions()
 	var client *mongo.Client
 	if client, err = mongo.Connect(opts); err != nil {
@@ -208,11 +209,11 @@ func ParseMongodbConfig(app *aa.App, section string) (*MongodbOptions, error) {
 		authSource := getSectionCfgWithFallback(app, MONGODB, section, "authSource", "AuthSource", "auth_source")
 		password := getSectionCfgWithFallback(app, MONGODB, section, "passwd", "Passwd", "password", "Password")
 
-		serviceName := getSectionCfgWithFallback(app, MONGODB, section, "serviceName", "ServiceName", "service_name", "SERVICE_NAME")
-		canonHostName := getSectionCfgWithFallback(app, MONGODB, section, "canonicalizeHostName", "CanonicalizeHostName", "canonicalize_host_name", "CANONICALIZE_HOST_NAME")
-		serviceRealm := getSectionCfgWithFallback(app, MONGODB, section, "serviceRealm", "ServiceRealm", "service_realm", "SERVICE_REALM")
-		serviceHost := getSectionCfgWithFallback(app, MONGODB, section, "serviceHost", "ServiceHost", "service_host", "SERVICE_HOST")
-		awsSessionToken := getSectionCfgWithFallback(app, MONGODB, section, "awsSessionToken", "AWSSessionToken", "aws_session_token", "AWS_SESSION_TOKEN")
+		serviceName := getSectionCfgWithFallback(app, MONGODB, section, "serviceName", "ServiceName", "service_name")
+		canonHostName := getSectionCfgWithFallback(app, MONGODB, section, "canonicalizeHostName", "CanonicalizeHostName", "canonicalize_host_name")
+		serviceRealm := getSectionCfgWithFallback(app, MONGODB, section, "serviceRealm", "ServiceRealm", "service_realm")
+		serviceHost := getSectionCfgWithFallback(app, MONGODB, section, "serviceHost", "ServiceHost", "service_host")
+		awsSessionToken := getSectionCfgWithFallback(app, MONGODB, section, "awsSessionToken", "AWSSessionToken", "aws_session_token")
 		var properties map[string]string
 		if !allEmpty(serviceName, canonHostName, serviceRealm, serviceHost, awsSessionToken) {
 			properties = make(map[string]string)
@@ -256,7 +257,7 @@ func ParseMongodbConfig(app *aa.App, section string) (*MongodbOptions, error) {
 	tlsEnabled, err7 := getSectionCfgBoolWithFallback(app, MONGODB, section, "tls", "TLS")
 	tlsInsecureSkipVerify, err8 := getSectionCfgBoolWithFallback(app, MONGODB, section, "tlsInsecureSkipVerify", "TLSInsecureSkipVerify", "tls_insecure_skip_verify")
 	writeConcern := getSectionCfgWithFallback(app, MONGODB, section, "writeConcern", "WriteConcern", "write_concern", "writerConcern", "WriterConcern", "writer_concern")
-	writeConcernJournal, err9 := getSectionCfgBoolWithFallback(app, MONGODB, section, "writeConcernJournal", "WriteConcernJournal", "write_concern_journal", "writerConcernJournal", "WriterConcernJournal", "writer_concern_journal")
+	writeConcernJournal, err9 := getSectionCfgBoolWithFallback(app, MONGODB, section, "writeConcernJournal", "WriteConcernJournal", "write_concern_journal")
 	if err := ae.FirstError(err1, err2, err3, err4, err5, err6, err7, err8, err9); err != nil {
 		return nil, err
 	}
@@ -274,7 +275,7 @@ func ParseMongodbConfig(app *aa.App, section string) (*MongodbOptions, error) {
 		getSectionCfgWithFallback(app, MONGODB, section, "tls", "TLS"),
 		getSectionCfgWithFallback(app, MONGODB, section, "tlsInsecureSkipVerify", "TLSInsecureSkipVerify", "tls_insecure_skip_verify"),
 		writeConcern,
-		getSectionCfgWithFallback(app, MONGODB, section, "writeConcernJournal", "WriteConcernJournal", "write_concern_journal", "writerConcernJournal", "WriterConcernJournal", "writer_concern_journal"),
+		getSectionCfgWithFallback(app, MONGODB, section, "writeConcernJournal", "WriteConcernJournal", "write_concern_journal"),
 	)
 	if !noOpts {
 		opts = &MongodbConnectionOptions{
@@ -296,7 +297,7 @@ func ParseMongodbConfig(app *aa.App, section string) (*MongodbOptions, error) {
 
 	return &MongodbOptions{
 		Protocol:          protocol,
-		Hosts:             strings.ReplaceAll(hosts, " ", ""),
+		Hosts:             hosts,
 		DB:                db,
 		Credential:        credential,
 		ConnectionOptions: opts,
