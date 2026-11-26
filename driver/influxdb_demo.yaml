@@ -1,0 +1,19 @@
+influxdb:
+  DEFAULT:
+    url: http://127.0.0.1:8086
+    auth: replace-with-your-influxdb-token
+    org: my-org
+    bucket: metrics
+    log_level: info
+    batch_size: 5000
+    flush_interval: 1s
+    precision: 1ms
+    gzip: true
+    retry_interval: 5s
+    max_retries: 3
+    retry_buffer_limit: 20000
+    max_retry_interval: 30s
+    max_retry_time: 60s
+    exponent_base: 2
+  service_metrics:
+    bucket: service-metrics

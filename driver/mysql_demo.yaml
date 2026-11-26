@@ -1,0 +1,35 @@
+mysql:
+  DEFAULT:
+    user: Aario
+    password: Luexu.com
+    net: tcp  # (e.g. "tcp", "tcp6", "unix". default: "tcp")
+    addr: 127.0.0.1:3306  # (default: "127.0.0.1:3306" for "tcp" and "/tmp/mysql.sock" for "unix")
+    # db: <default to section name>
+    connAttributes: ""  # comma-delimited string of user-defined "key:value" pairs
+    collation: "" # When set, this will be set in SET NAMES <charset> COLLATE <collation> query
+    maxAllowedPacket: 0  # Max packet size allowed
+    serverPubKey: ""
+    tls: false # e.g. "true", "false", "skip-verify", "preferred", "<name>". default: "false"
+    timeout: 5s,5s,5s # connTimeout, readTimeout, writeTimeout
+    allowAllFiles: false # Allow all files to be used with LOAD DATA LOCAL INFILE
+    allowCleartextPasswords  : false # Allows the cleartext client side plugin
+    allowFallbackToPlaintext : false # Allows fallback to unencrypted connection if server does not support TLS
+    allowNativePasswords     : false # Allows the native password authentication method
+    allowOldPasswords        : false # Allows the old insecure password method
+    checkConnLiveness        : false # Check connections for liveness before using them
+    clientFoundRows          : false # Return number of matching rows instead of rows changed
+    columnsWithAlias         : false # Prepend table alias to column names
+    interpolateParams        : false # Interpolate placeholders into query string
+    multiStatements          : false # Allow multiple statements in one query
+    parseTime                : false # Parse time values to time.Time
+    rejectReadOnly           : false # Reject read-only connections
+    poolMaxIdleConns: 0
+    poolMaxOpenConns: 0
+    poolConnMaxLifeTime: ""
+    poolConnMaxIdleTime: ""
+  test: {}    # db = test
+  user:
+    db: user_1314     # alias to database. reset to user_1314 instead of user
+  hello:
+    # dsn 优先级最高，忽略其他配置。
+    dsn: "user:password@tcp(mysql.example:3307)/hello?parseTime=true&timeout=2s&readTimeout=3s&writeTimeout=4s&tls=skip-verify&customOption=value&clientFoundRows=true"

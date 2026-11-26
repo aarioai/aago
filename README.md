@@ -6,8 +6,7 @@ AaGo aconfig 里面默认使用 Consul 进行服务注册和服务发现，并�
 
 如果用户不想使用 MongoDB ，可以自行生成文件夹，或忽略通过 `aago-tool` 脚手架 `./cmd <project_dir> new <app 名称>` 生成的代码即可。
 
-同时 AaGo Driver 项目（[https://github.com/aarioai/aago-driver](https://github.com/aarioai/aago-driver)），也提供了 MongoDB、MySQL、RabbitMQ、Redis 等驱动方法，方便开发者快捷操作。脚手架与 Demo 见独立仓库 [aago-tool](https://github.com/aarioai/aago-tool)。
-
+ 
 > 架构、HTTP 框架、配置、类型系统与性能说明见 [doc/README.md](doc/README.md)。
 > 使用 VS Code Copilot 时，框架技能位于 `.github/skills/aago-framework`。
 
@@ -42,8 +41,7 @@ project 目录下，放了3个示例项目：
 
 AaGo（`github.com/aarioai/aago`）是基于 Go 标准库 `net/http` 的应用框架，提供接近 PHP 风格的 Controller 层，并支持在**同一进程**内管理多个 HTTP / gRPC 服务，便于微服务早期低成本演进。
 
-配套驱动见 [aago-driver](https://github.com/aarioai/aago-driver)（MongoDB、MySQL、RabbitMQ、Redis 等）。
-
+ 
 ---
 
 ## 1. 设计目标
@@ -310,7 +308,6 @@ flowchart BT
   std["net/http stdlib"]
   consul["Consul API"]
   grpc["google.golang.org/grpc"]
-  driver["aago-driver 可选"]
 
   demo --> aa
   demo --> driver
@@ -322,8 +319,6 @@ flowchart BT
 ```
 
 原则：
-
-- 业务代码依赖 `aa` 与可选 `aago-driver`，不反向依赖 demo
 - `httpsvr/atype` 只依赖 `Context` 的基础 Query/Body 接口，不反向依赖路由实现细节
 - `pkg` 保持无全局状态，可被 `aa` 与业务共用
 

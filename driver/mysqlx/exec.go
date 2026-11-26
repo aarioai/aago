@@ -1,0 +1,190 @@
+package mysqlx
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+
+	"github.com/aarioai/aago/aa/ae"
+	"github.com/aarioai/aago/aa/alog"
+	"github.com/aarioai/aago/driver"
+)
+
+type DB struct {
+	Schema string
+	DB     *sql.DB
+	error  *ae.Error
+}
+
+func NewDriver(schema string, db *sql.DB, e *ae.Error) *DB {
+	return &DB{
+		Schema: schema,
+		DB:     db,
+		error:  e,
+	}
+}
+
+// 批处理时 prepare 性能更好（MySQL 8.0+ 服务端预处理语句）；非批处理不要使用 prepare，会造成多余开销
+// 不要忘记 stmt.Close() 释放连接池资源
+// Prepared statements take up server resources and should be closed after use.
+func (d *DB) Prepare(ctx context.Context, query string) (*sql.Stmt, *ae.Error) {
+	if d.error != nil {
+		return nil, d.error
+	}
+	stmt, err := d.DB.PrepareContext(ctx, query)
+	if err != nil {
+		if stmt != nil {
+			alog.OnError(stmt.Close())
+		}
+		return nil, driver.NewMysqlError(err, query)
+	}
+	return stmt, nil
+}
+
+/*
+stmt close 必须要等到相关都执行完（包括  res.LastInsertId()  ,  row.Scan()
+*/
+func (d *DB) Execute(ctx context.Context, query string, args ...any) (sql.Result, *ae.Error) {
+	if d.error != nil {
+		return nil, d.error
+	}
+	res, err := d.DB.ExecContext(ctx, query, args...)
+	return res, driver.NewMysqlError(err, query)
+}
+
+func (d *DB) Exec(ctx context.Context, query string, args ...any) *ae.Error {
+	if d.error != nil {
+		return d.error
+	}
+	_, e := d.Execute(ctx, query, args...)
+	return e
+}
+
+func (d *DB) Insert(ctx context.Context, query string, args ...any) (uint, *ae.Error) {
+	if d.error != nil {
+		return 0, d.error
+	}
+	res, e := d.Execute(ctx, query, args...)
+	if e != nil {
+		return 0, e
+	}
+	// 由于事务是先执行，后回滚或提交，所以可以先获取插入的ID，后commit()
+	id, err := res.LastInsertId()
+	return uint(id), driver.NewMysqlError(err, query)
+}
+
+func (d *DB) Update(ctx context.Context, query string, args ...any) (int64, *ae.Error) {
+	if d.error != nil {
+		return 0, d.error
+	}
+	res, e := d.Execute(ctx, query, args...)
+	if e != nil {
+		return 0, e
+	}
+	// 由于事务是先执行，后回滚或提交，所以可以先获取更新结果，后commit()
+	id, err := res.RowsAffected()
+	return id, driver.NewMysqlError(err, query)
+}
+
+// 批量查询
+/*
+	stmt,_ := db.Prepare("select count(*) from tb where id=?")
+	defer stmt.Close()
+	for i:=0;i<1000;i++{
+		stmt.QueryRowContext(ctx, i).&Scan()
+	}
+*/
+//func (d *DB) BatchQueryRow(ctx context.Context, query string, margs ...[]any) ([]*mysqlx.Row, *ae.Error) {
+//	stmt, e := d.Prepare(ctx, query)
+//	if e != nil {
+//		return nil, e
+//	}
+//	defer stmt.Close()
+//	rows := make([]*mysqlx.Row, len(margs))
+//	for i, args := range margs {
+//		rows[i] = stmt.QueryRowContext(ctx, args...)
+//	}
+//	return rows, nil
+//}
+
+func (d *DB) QueryRow(ctx context.Context, query string, args ...any) (*sql.Row, *ae.Error) {
+	if d.error != nil {
+		return nil, d.error
+	}
+	row := d.DB.QueryRowContext(ctx, query, args...)
+	return row, driver.NewMysqlError(row.Err(), query)
+}
+
+func (d *DB) ScanArgs(ctx context.Context, query string, args []any, dest ...any) *ae.Error {
+	if d.error != nil {
+		return d.error
+	}
+	row, e := d.QueryRow(ctx, query, args...)
+	if e != nil {
+		return e
+	}
+	return driver.NewMysqlError(row.Scan(dest...), query)
+}
+func (d *DB) ScanRow(ctx context.Context, query string, dest ...any) *ae.Error {
+	if d.error != nil {
+		return d.error
+	}
+	row, e := d.QueryRow(ctx, query)
+	if e != nil {
+		return e
+	}
+	return driver.NewMysqlError(row.Scan(dest...), query)
+}
+
+func (d *DB) Scan(ctx context.Context, query string, id uint64, dest ...any) *ae.Error {
+	if d.error != nil {
+		return d.error
+	}
+	row, e := d.QueryRow(ctx, query, id)
+	if e != nil {
+		return e
+	}
+	return driver.NewMysqlError(row.Scan(dest...), query, id)
+}
+
+func (d *DB) ScanX(ctx context.Context, query string, id string, dest ...any) *ae.Error {
+	if d.error != nil {
+		return d.error
+	}
+	row, e := d.QueryRow(ctx, query, id)
+	if e != nil {
+		return e
+	}
+	return driver.NewMysqlError(row.Scan(dest...), query, id)
+}
+
+func (d *DB) ScanAny(ctx context.Context, query string, id any, dest ...any) *ae.Error {
+	if d.error != nil {
+		return d.error
+	}
+	row, e := d.QueryRow(ctx, query, id)
+	if e != nil {
+		return e
+	}
+	return driver.NewMysqlError(row.Scan(dest...), query, id)
+}
+
+// Query returns a nil result when no rows are found.
+// QueryRow returns ae.ErrorNotFound if no rows match the query.
+// do not forget to close *mysqlx.Rows
+func (d *DB) Query(ctx context.Context, query string, args ...any) (*sql.Rows, *ae.Error) {
+	if d.error != nil {
+		return nil, d.error
+	}
+	rows, err := d.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		if rows != nil {
+			alog.OnError(rows.Close())
+		}
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ae.ErrorNoRowsAvailable
+		}
+		return nil, driver.NewMysqlError(err, query)
+	}
+	return rows, nil
+}

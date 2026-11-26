@@ -1,0 +1,13 @@
+rabbitmq:
+  DEFAULT:
+    host: 127.0.0.1:5672
+    user: replace-with-your-username
+    password: replace-with-your-password
+    vhost: /
+    channel_max: 2047
+    frame_size: 0
+    heartbeat: 10s
+    reconnect_interval: 5s
+  events:
+    vhost: /events
+    heartbeat: 15s

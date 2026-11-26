@@ -1,0 +1,28 @@
+postgresql:
+  DEFAULT:
+    user: Aario
+    password: Luexu.com
+    net: tcp  # (e.g. "tcp", "tcp4", "tcp6", "unix". default: "tcp")
+    addr: 127.0.0.1:5432  # TCP requires host:port; Unix requires a .s.PGSQL.<port> socket path
+    # db: <default to section name>
+    scheme: postgres # default: "postgres"
+    tls: prefer  # alias: sslmode. e.g. "disable", "allow", "prefer", "require", "verify-ca", "verify-full". default: "prefer"
+    timeout: 5s  # connTimeout
+    applicationName: ""  # session application_name
+    searchPath: ""  # session search_path
+    poolMaxConns: 0  # <= 0 keeps the pgxpool default (greater of 4 or NumCPU)
+    poolMinConns: 0
+    poolMinIdleConns: 0
+    poolMaxConnLifetime: ""        # e.g. 1h
+    poolMaxConnLifetimeJitter: ""  # e.g. 10m
+    poolMaxConnIdleTime: ""        # e.g. 30m
+    poolHealthCheckPeriod: ""      # e.g. 1m
+  test: {}    # db = test
+  user:
+    db: user_1314     # alias to database. reset to user_1314 instead of user
+  hello:
+    # dsn 优先级最高，忽略其他配置（TLS 证书、servicefile 等高级选项也写在这里）。
+    dsn: "postgres://user:password@127.0.0.1:5432/hello?sslmode=disable"
+  unix:  # unix domain socket
+    net: unix
+    addr: /var/run/postgresql/.s.PGSQL.5432

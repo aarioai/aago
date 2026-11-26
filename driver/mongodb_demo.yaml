@@ -1,0 +1,21 @@
+mongodb:
+  DEFAULT:
+    protocol: mongodb
+    hosts: 127.0.0.1:27017
+    db: app
+    user: replace-with-your-username
+    password: replace-with-your-password
+    auth_source: admin
+    auth_mechanism: SCRAM-SHA-256
+    connect_timeout: 10s
+    server_selection_timeout: 30s
+    max_pool_size: 100
+    min_pool_size: 4
+    replica_set: rs0
+  stats:
+    db: statistics
+    timeout: 60s
+    tls: true
+    tls_insecure_skip_verify: false
+    write_concern: majority
+    write_concern_journal: true

@@ -1,0 +1,47 @@
+redis:
+  DEFAULT:
+    net: tcp # alias to network, default: "tcp"
+    addr: 127.0.0.1:6379  # host:port
+    nodeAddr: "" # default to addr
+    clientName: "" # execute the `CLIENT SETNAME ClientName` command for each conn.
+    protocol: 3 #  Protocol 2 or 3. Use the version to negotiate RESP version with redis-server.
+    user: replace-with-your-username  # alias to username
+    password: replace-with-your-password
+    authEmptyPassword: false
+    db: 1
+    maxRetries: 3 # default: 3 retries
+    minRetryBackoff: 10ms  # default: 10 milliseconds
+    maxRetryBackoff: 1s  # default: 1 second;
+    dialTimeout: 5s # default: 5 seconds
+    dialerRetries: 5 # default: 5 retries
+    dialerRetryTimeout: 100ms # default: 100 milliseconds
+    timeout: 5s,5s,5s  # connTimeot, readTimeout, writeTimeout
+    contextTimeoutEnabled: false
+    readBufferSize: 32768 # default: 32KB (32768 bytes)
+    writeBufferSize: 32768 # default: 32KB (32768 bytes)
+    pipelineReadBufferSize: 0
+    pipelineWriteBufferSize: 0
+    pipelinePoolSize: 0
+    pipelineMinIdleConns: 0
+    poolFIFO: false
+    poolSize: 0 # default: 10 * runtime.GOMAXPROCS(0)
+    maxConcurrentDials: 0 # If <= 0, defaults to PoolSize. If > PoolSize, it will be capped at PoolSize.
+    poolTimeout: 0 # default: ReadTimeout + 1 second, or 30 seconds when ReadTimeout is not positive
+    minIdleConns: 0
+    maxIdleConns: 0
+    maxActiveConns: 0
+    connMaxIdleTime: "30m"
+    connMaxLifetime: "0s"
+    connMaxLifetimeJitter: "0s"
+    connMaxLifetimeReapInterval: "0s"
+    disableIdentity: false
+    identitySuffix: "" # add suffix to client name.
+    unstableResp3: false
+    failingTimeoutSeconds: "15s" # default is 15 seconds.
+    clientSideCacheStrategy: 0
+    clientSideCacheRefreshOnInvalidate: 0
+    clientSideCacheCoalesceMisses: false
+    clientSideCacheInvalidationBatchWindow: "0s"
+
+  cache:
+    db: 2
